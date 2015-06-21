@@ -15,7 +15,9 @@
 namespace logicalaccess
 {
     class Profile;
+	class NFCReaderCardAdapter;
     class NFCReaderProvider;
+
     /**
      * \brief The NFC reader unit class.
      */
@@ -124,6 +126,12 @@ namespace logicalaccess
          */
         virtual std::string getReaderSerialNumber();
 
+		/**
+		* \brief Get the default NFC reader/card adapter.
+		* \return The default NFC reader/card adapter.
+		*/
+		virtual std::shared_ptr<NFCReaderCardAdapter> getDefaultNFCReaderCardAdapter();
+
         /**
          * \brief Serialize the current object to XML.
          * \param parentNode The parent node.
@@ -175,6 +183,8 @@ namespace logicalaccess
 		 * \brief The reader unit connected name.
 		 */
 		std::string d_connectedName;
+
+		bool d_chip_connected;
 
 		/**
 		 * \brief The NFC device.

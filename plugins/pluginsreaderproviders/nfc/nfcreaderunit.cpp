@@ -17,7 +17,9 @@
 #include "nfcreaderprovider.hpp"
 #include "logicalaccess/cards/chip.hpp"
 #include <boost/filesystem.hpp>
+#include "readercardadapters/nfcreadercardadapter.hpp"
 #include "nfcdatatransport.hpp"
+#include "commands/mifarenfccommands.hpp"
 #include "commands/desfireev1iso7816commands.hpp"
 #include "commands/desfireiso7816resultchecker.hpp"
 #include "iso7816resultchecker.hpp"
@@ -55,10 +57,10 @@ namespace logicalaccess
 	};
 
     NFCReaderUnit::NFCReaderUnit(const std::string& name)
-		: ReaderUnit(), d_device(NULL), d_name(name), d_connectedName(name)
+		: ReaderUnit(), d_device(NULL), d_name(name), d_connectedName(name), d_chip_connected(false)
 	{
         d_readerUnitConfig.reset(new NFCReaderUnitConfiguration());
-        setDefaultReaderCardAdapter(std::shared_ptr<ReaderCardAdapter>(new ReaderCardAdapter()));
+        setDefaultReaderCardAdapter(std::shared_ptr<NFCReaderCardAdapter>(new NFCReaderCardAdapter()));
 
         std::shared_ptr<NFCDataTransport> dataTransport(new NFCDataTransport());
         setDataTransport(dataTransport);
@@ -199,12 +201,44 @@ namespace logicalaccess
 
     bool NFCReaderUnit::connect()
     {
-        return true;
+		if (isConnected())
+		{
+			LOG(LogLevel::ERRORS) << EXCEPTION_MSG_CONNECTED;
+			disconnect();
+		}
+
+		bool connected = d_chip_connected = false;
+
+		if (d_insertedChip && d_chips.find(d_insertedChip) != d_chips.end())
+		{
+			if (d_chips[d_insertedChip].nm.nmt == NMT_ISO14443A)
+			{
+				nfc_target pnti;
+				nfc_modulation modulation;
+				modulation.nmt = NMT_ISO14443A;
+				modulation.nbr = NBR_106;
+
+				if (nfc_initiator_select_passive_target(d_device, modulation, d_chips[d_insertedChip].nti.nai.abtUid, d_chips[d_insertedChip].nti.nai.szUidLen, &pnti) >= 0)
+				{
+					d_chip_connected = connected = true;
+				}
+			}
+		}
+
+		return connected;
     }
 
     void NFCReaderUnit::disconnect()
     {
-        
+		if (d_insertedChip && d_chips.find(d_insertedChip) != d_chips.end())
+		{
+			if (d_chips[d_insertedChip].nm.nmt == NMT_ISO14443A)
+			{
+				nfc_initiator_deselect_target(d_device);
+			}
+		}
+
+		d_chip_connected = false;
     }
 
     std::shared_ptr<Chip> NFCReaderUnit::createChip(std::string type)
@@ -222,7 +256,7 @@ namespace logicalaccess
 
 			if (type == "Mifare1K" || type == "Mifare4K" || type == "Mifare")
 			{
-				//commands.reset(new MifareNFCCommands());
+				commands.reset(new MifareNFCCommands());
 			}
 			else if (type == "DESFireEV1")
 			{
@@ -378,9 +412,14 @@ namespace logicalaccess
         return "";
     }
 
+	std::shared_ptr<NFCReaderCardAdapter> NFCReaderUnit::getDefaultNFCReaderCardAdapter()
+	{
+		return std::dynamic_pointer_cast<NFCReaderCardAdapter>(getDefaultReaderCardAdapter());
+	}
+
     bool NFCReaderUnit::isConnected()
     {
-        return bool(d_insertedChip);
+        return d_chip_connected;
     }
 
     bool NFCReaderUnit::connectToReader()
