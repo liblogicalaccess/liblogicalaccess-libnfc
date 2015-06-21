@@ -1,0 +1,15 @@
+packages
+target
+Win32
+x64
+Release
+Debug
+*.suo
+*.user
+VERSION
+CMakeCache.txt
+CMakeFiles
+/plugins/pluginsreaderproviders/ALL_BUILD.vcxproj
+/plugins/pluginsreaderproviders/ALL_BUILD.vcxproj.filters
+cmake_install.cmake
+*.sdf
