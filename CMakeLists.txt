@@ -33,7 +33,7 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${CXX11_FLAGS}")
 find_package(Boost 1.49 REQUIRED COMPONENTS filesystem system date_time)
 include_directories(${Boost_INCLUDE_DIRS})
 
-find_package(libnfc REQUIRED)
+find_package(LIBNFC REQUIRED)
 include_directories(${LIBNFC_INCLUDE_DIR})
 
 include_directories(packages/include)
@@ -80,9 +80,7 @@ else()
   file(GLOB resourcerc ${CMAKE_CURRENT_SOURCE_DIR}/vc++/resource.rc)
 endif()
 
-add_subdirectory(plugins/pluginscards)
 add_subdirectory(plugins/pluginsreaderproviders)
-add_subdirectory(tests)
 
 if ( NOT DEFINED LIBLOGICALACCESS_CMAKE_CONFIG_DIR )
   set ( LIBLOGICALACCESS_CMAKE_CONFIG_DIR lib/${LIB_SUFFIX}/cmake/liblogicalaccess )

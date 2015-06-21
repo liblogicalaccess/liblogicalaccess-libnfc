@@ -7,9 +7,16 @@ if (WIN32)
 endif()
 
 if (WIN32)
-  set(INCLUDE_FOLDER ${CMAKE_CURRENT_SOURCE_DIR}/../../../packages/include/logicalaccess/plugins/readers/iso7816)
+  set(INCLUDE_FOLDER ${CMAKE_CURRENT_SOURCE_DIR}/../../../packages/include/logicalaccess/plugins/readers/iso7816
+  ${CMAKE_CURRENT_SOURCE_DIR}/../../../packages/include/logicalaccess/plugins/cards/iso7816
+  ${CMAKE_CURRENT_SOURCE_DIR}/../../../packages/include/logicalaccess/plugins/cards/desfire
+  ${CMAKE_CURRENT_SOURCE_DIR}/../../../packages/include/logicalaccess/plugins/cards/samav2
+  )
 else ()
 set(INCLUDE_FOLDER ${LIBLOGICALACCESS_INCLUDE_DIR} ${LIBLOGICALACCESS_INCLUDE_DIR}/logicalaccess/plugins/readers/iso7816
+  ${LIBLOGICALACCESS_INCLUDE_DIR}/logicalaccess/plugins/cards/iso7816
+  ${LIBLOGICALACCESS_INCLUDE_DIR}/logicalaccess/plugins/cards/desfire
+  ${LIBLOGICALACCESS_INCLUDE_DIR}/logicalaccess/plugins/cards/samav2
   ${LIBLOGICALACCESS_INCLUDE_DIR}/logicalaccess/
     )
 endif()
@@ -73,7 +80,7 @@ target_link_libraries(
 	${LINK_OPT}
 )
 
-install ( FILES ${include} DESTINATION include/logicalaccess/plugins/readers/libnfc )
-install ( FILES ${include_readercardadapters} DESTINATION include/logicalaccess/plugins/readers/libnfc/readercardadapters )
-install ( FILES ${include_commands} DESTINATION include/logicalaccess/plugins/readers/libnfc/commands )
+install ( FILES ${include} DESTINATION include/logicalaccess/plugins/readers/nfc )
+install ( FILES ${include_readercardadapters} DESTINATION include/logicalaccess/plugins/readers/nfc/readercardadapters )
+install ( FILES ${include_commands} DESTINATION include/logicalaccess/plugins/readers/nfc/commands )
 install ( TARGETS libnfc-nfcreaders RUNTIME DESTINATION bin/${LIB_SUFFIX} ARCHIVE DESTINATION lib/${LIB_SUFFIX} LIBRARY DESTINATION lib/${LIB_SUFFIX} )

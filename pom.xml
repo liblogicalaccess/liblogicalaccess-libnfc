@@ -581,12 +581,12 @@
 			<scope>compile</scope>
 			<type>zip</type>
 		</dependency>
-		<!--<dependency>
+		<dependency>
 			<groupId>lib.readers</groupId>
 			<artifactId>libnfc</artifactId>
 			<version>1.7.1</version>
 			<scope>compile</scope>
 			<type>zip</type>
-		</dependency>-->
+		</dependency>
 	</dependencies>
 </project>

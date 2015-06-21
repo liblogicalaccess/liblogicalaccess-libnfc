@@ -1,32 +1,32 @@
 /**
- * \file libnfcreaderunitconfiguration.hpp
+ * \file nfcreaderunitconfiguration.hpp
  * \author Maxime C. <maxime-dev@islog.com>
- * \brief LibNFC Reader unit configuration.
+ * \brief NFC Reader unit configuration.
  */
 
-#ifndef LOGICALACCESS_LIBNFCREADERUNITCONFIGURATION_HPP
-#define LOGICALACCESS_LIBNFCREADERUNITCONFIGURATION_HPP
+#ifndef LOGICALACCESS_NFCREADERUNITCONFIGURATION_HPP
+#define LOGICALACCESS_NFCREADERUNITCONFIGURATION_HPP
 
 #include "logicalaccess/readerproviders/readerunitconfiguration.hpp"
 
 namespace logicalaccess
 {
     /**
-     * \brief The LibNFC reader unit configuration base class.
+     * \brief The NFC reader unit configuration base class.
      */
-    class LIBLOGICALACCESS_API LibNFCReaderUnitConfiguration : public ReaderUnitConfiguration
+    class LIBLOGICALACCESS_API NFCReaderUnitConfiguration : public ReaderUnitConfiguration
     {
     public:
 
         /**
          * \brief Constructor.
          */
-        LibNFCReaderUnitConfiguration();
+        NFCReaderUnitConfiguration();
 
         /**
          * \brief Destructor.
          */
-        virtual ~LibNFCReaderUnitConfiguration();
+        virtual ~NFCReaderUnitConfiguration();
 
         /**
          * \brief Reset the configuration to default values

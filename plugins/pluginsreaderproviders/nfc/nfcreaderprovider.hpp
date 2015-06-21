@@ -1,45 +1,46 @@
 /**
- * \file libnfcreaderprovider.hpp
+ * \file nfcreaderprovider.hpp
  * \author Maxime C. <maxime-dev@islog.com>
- * \brief LibNFC card reader provider.
+ * \brief NFC card reader provider.
  */
 
-#ifndef LOGICALACCESS_READERLIBNFC_PROVIDER_HPP
-#define LOGICALACCESS_READERLIBNFC_PROVIDER_HPP
+#ifndef LOGICALACCESS_READERNFC_PROVIDER_HPP
+#define LOGICALACCESS_READERNFC_PROVIDER_HPP
 
 #include "logicalaccess/readerproviders/readerprovider.hpp"
-#include "libnfcreaderunit.hpp"
+#include "nfcreaderunit.hpp"
 
 #include <string>
 #include <vector>
 
 #include "logicalaccess/logs.hpp"
 
+
 namespace logicalaccess
 {
-#define READER_LIBNFC		"LibNFC"
+#define READER_NFC		"NFC"
 
     /**
-     * \brief LibNFC Reader Provider class.
+     * \brief NFC Reader Provider class.
      */
-    class LIBLOGICALACCESS_API LibNFCReaderProvider : public ReaderProvider
+    class LIBLOGICALACCESS_API NFCReaderProvider : public ReaderProvider
     {
     public:
 
         /**
-         * \brief Get the LibNFCReaderProvider instance.
+         * \brief Get the NFCReaderProvider instance.
          */
-        static std::shared_ptr<LibNFCReaderProvider> getSingletonInstance();
+        static std::shared_ptr<NFCReaderProvider> getSingletonInstance();
 
         /**
-         * \brief Get a new LibNFCReaderProvider instance.
+         * \brief Get a new NFCReaderProvider instance.
          */
-        std::shared_ptr<LibNFCReaderProvider> createInstance();
+        std::shared_ptr<NFCReaderProvider> createInstance();
 
         /**
          * \brief Destructor.
          */
-        ~LibNFCReaderProvider();
+        ~NFCReaderProvider();
 
         /**
          * \brief Release the provider resources.
@@ -50,13 +51,13 @@ namespace logicalaccess
          * \brief Get the reader provider type.
          * \return The reader provider type.
          */
-        virtual std::string getRPType() const { return READER_LIBNFC; };
+        virtual std::string getRPType() const { return READER_NFC; };
 
         /**
          * \brief Get the reader provider name.
          * \return The reader provider name.
          */
-        virtual std::string getRPName() const { return "LibNFC"; };
+        virtual std::string getRPName() const { return "NFC"; };
 
         /**
          * \brief List all readers of the system.
@@ -78,18 +79,29 @@ namespace logicalaccess
          */
         virtual std::shared_ptr<ReaderUnit> createReaderUnit();
 
+		/**
+		* \brief Get the NFC context.
+		* \return The NFC context.
+		*/
+		nfc_context* getContext() const { return d_context; };
+
     protected:
 
         /**
          * \brief Constructor.
          */
-        LibNFCReaderProvider();
+        NFCReaderProvider();
 
         /**
          * \brief The reader list.
          */
         ReaderList d_readers;
+
+		/**
+		 * \brief The NFC Context.
+		*/
+		nfc_context* d_context;
     };
 }
 
-#endif /* LOGICALACCESS_READERLIBNFC_PROVIDER_HPP */
+#endif /* LOGICALACCESS_READERNFC_PROVIDER_HPP */

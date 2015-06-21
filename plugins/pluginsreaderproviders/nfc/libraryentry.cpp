@@ -1,7 +1,7 @@
 #include <string>
 #include <memory>
 #include "logicalaccess/readerproviders/readerprovider.hpp"
-#include "libnfcreaderprovider.hpp"
+#include "nfcreaderprovider.hpp"
 
 #ifdef _MSC_VER
 #include "logicalaccess/msliblogicalaccess.h"
@@ -18,14 +18,14 @@ extern "C"
 {
     LIBLOGICALACCESS_API char *getLibraryName()
     {
-        return (char *)"LibNFC";
+        return (char *)"NFC";
     }
 
-    LIBLOGICALACCESS_API void getLibNFCReader(std::shared_ptr<logicalaccess::ReaderProvider>* rp)
+    LIBLOGICALACCESS_API void getNFCReader(std::shared_ptr<logicalaccess::ReaderProvider>* rp)
     {
         if (rp != NULL)
         {
-            *rp = logicalaccess::LibNFCReaderProvider::getSingletonInstance();
+            *rp = logicalaccess::NFCReaderProvider::getSingletonInstance();
         }
     }
 
@@ -38,8 +38,8 @@ extern "C"
             {
             case 0:
             {
-                *getterfct = (void*)&getLibNFCReader;
-                sprintf(readername, READER_LIBNFC);
+                *getterfct = (void*)&getNFCReader;
+                sprintf(readername, READER_NFC);
                 ret = true;
             }
                 break;

@@ -1,36 +1,37 @@
 /**
- * \file libnfcreaderunit.hpp
+ * \file nfcreaderunit.hpp
  * \author Maxime C. <maxime-dev@islog.com>
- * \brief LibNFC Reader unit.
+ * \brief NFC Reader unit.
  */
 
-#ifndef LOGICALACCESS_LIBNFCREADERUNIT_HPP
-#define LOGICALACCESS_LIBNFCREADERUNIT_HPP
+#ifndef LOGICALACCESS_NFCREADERUNIT_HPP
+#define LOGICALACCESS_NFCREADERUNIT_HPP
 
 #include "logicalaccess/readerproviders/readerunit.hpp"
-#include "libnfcreaderunitconfiguration.hpp"
-#include "readercardadapters/libnfcreadercardadapter.hpp"
+#include "nfcreaderunitconfiguration.hpp"
+
+#include "nfc/nfc.h"
 
 namespace logicalaccess
 {
     class Profile;
-    class LibNFCReaderProvider;
+    class NFCReaderProvider;
     /**
-     * \brief The LibNFC reader unit class.
+     * \brief The NFC reader unit class.
      */
-    class LIBLOGICALACCESS_API LibNFCReaderUnit : public ReaderUnit
+    class LIBLOGICALACCESS_API NFCReaderUnit : public ReaderUnit
     {
     public:
 
         /**
          * \brief Constructor.
          */
-        LibNFCReaderUnit();
+		NFCReaderUnit(const std::string& name);
 
         /**
          * \brief Destructor.
          */
-        virtual ~LibNFCReaderUnit();
+        virtual ~NFCReaderUnit();
 
         /**
          * \brief Get the reader unit name.
@@ -85,12 +86,6 @@ namespace logicalaccess
         virtual std::vector<std::shared_ptr<Chip> > getChipList();
 
         /**
-         * \brief Get the default LibNFC reader/card adapter.
-         * \return The default LibNFC reader/card adapter.
-         */
-        virtual std::shared_ptr<LibNFCReaderCardAdapter> getDefaultLibNFCReaderCardAdapter();
-
-        /**
          * \brief Connect to the card.
          * \return True if the card was connected without error, false otherwise.
          *
@@ -142,20 +137,55 @@ namespace logicalaccess
         virtual void unSerialize(boost::property_tree::ptree& node);
 
         /**
-         * \brief Get the LibNFC reader unit configuration.
-         * \return The LibNFC reader unit configuration.
+         * \brief Get the NFC reader unit configuration.
+         * \return The NFC reader unit configuration.
          */
-        std::shared_ptr<LibNFCReaderUnitConfiguration> getLibNFCConfiguration() { return std::dynamic_pointer_cast<LibNFCReaderUnitConfiguration>(getConfiguration()); };
+        std::shared_ptr<NFCReaderUnitConfiguration> getNFCConfiguration() { return std::dynamic_pointer_cast<NFCReaderUnitConfiguration>(getConfiguration()); };
 
         /**
-         * \brief Get the LibNFC reader provider.
-         * \return The LibNFC reader provider.
+         * \brief Get the NFC reader provider.
+         * \return The NFC reader provider.
          */
-        std::shared_ptr<LibNFCReaderProvider> getLibNFCReaderProvider() const;
+        std::shared_ptr<NFCReaderProvider> getNFCReaderProvider() const;
+
+		static std::shared_ptr<NFCReaderUnit> createNFCReaderUnit(const std::string& readerName);
+
+		/**
+		* \brief Get the NFC device.
+		* \return The NFC device.
+		*/
+		nfc_device* getDevice() const { return d_device; };
+
+	protected:
+
+		std::string getCardTypeFromTarget(nfc_target target);
+
+		void refreshChipList();
+
+		std::vector<unsigned char> getCardSerialNumber(nfc_target target);
 
     protected:
 
-        
+		/**
+		 * \brief The reader unit name.
+		 */
+		std::string d_name;
+
+		/**
+		 * \brief The reader unit connected name.
+		 */
+		std::string d_connectedName;
+
+		/**
+		 * \brief The NFC device.
+		 */
+		nfc_device *d_device;
+
+		/**
+		 * \brief Map liblogicalaccess Chip with libnfc objects
+		 * \remarks This could be replaced by a context assigned to the chip but it would require LLA refactoring
+		 */
+		std::map<std::shared_ptr<Chip>, nfc_target> d_chips;
     };
 }
 

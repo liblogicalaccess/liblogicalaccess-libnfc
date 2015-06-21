@@ -1,1 +1,1 @@
-add_subdirectory(libnfc)
+add_subdirectory(nfc)
