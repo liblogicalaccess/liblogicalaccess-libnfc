@@ -110,4 +110,64 @@ namespace logicalaccess
 
 		getNFCReaderCardAdapter()->sendCommand(command);
     }
+
+	void MifareNFCCommands::increment(unsigned char blockno, unsigned int value)
+	{
+		increment_raw(blockno, value);
+		transfer(blockno);
+	}
+
+	void MifareNFCCommands::decrement(unsigned char blockno, unsigned int value)
+	{
+		decrement_raw(blockno, value);
+		transfer(blockno);
+	}
+
+	void MifareNFCCommands::increment_raw(unsigned char blockno, unsigned int value)
+	{
+		std::vector<unsigned char> command;
+		command.push_back(0xC1);
+		command.push_back(blockno);
+		command.push_back(static_cast<unsigned char>((value >> 24) & 0xff));
+		command.push_back(static_cast<unsigned char>((value >> 16) & 0xff));
+		command.push_back(static_cast<unsigned char>((value >> 8) & 0xff));
+		command.push_back(static_cast<unsigned char>(value & 0xff));
+
+		getNFCReaderCardAdapter()->sendCommand(command);
+	}
+
+	void MifareNFCCommands::decrement_raw(unsigned char blockno, unsigned int value)
+	{
+		std::vector<unsigned char> command;
+		command.push_back(0xC0);
+		command.push_back(blockno);
+		command.push_back(static_cast<unsigned char>((value >> 24) & 0xff));
+		command.push_back(static_cast<unsigned char>((value >> 16) & 0xff));
+		command.push_back(static_cast<unsigned char>((value >> 8) & 0xff));
+		command.push_back(static_cast<unsigned char>(value & 0xff));
+
+		getNFCReaderCardAdapter()->sendCommand(command);
+	}
+
+	void MifareNFCCommands::transfer(unsigned char blockno)
+	{
+		std::vector<unsigned char> command;
+		command.push_back(0xB0);
+		command.push_back(blockno);
+
+		getNFCReaderCardAdapter()->sendCommand(command);
+	}
+
+	void MifareNFCCommands::restore(unsigned char blockno)
+	{
+		std::vector<unsigned char> command;
+		command.push_back(0xC2);
+		command.push_back(blockno);
+		command.push_back(0x00);
+		command.push_back(0x00);
+		command.push_back(0x00);
+		command.push_back(0x00);
+
+		getNFCReaderCardAdapter()->sendCommand(command);
+	}
 }
