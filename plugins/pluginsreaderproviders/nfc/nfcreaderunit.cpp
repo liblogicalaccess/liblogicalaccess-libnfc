@@ -12,11 +12,17 @@
 
 #include "logicalaccess/dynlibrary/librarymanager.hpp"
 #include "logicalaccess/dynlibrary/idynlibrary.hpp"
+#include "logicalaccess/myexception.hpp"
+#include "logicalaccess/settings.hpp"
 
 #include "logicalaccess/bufferhelper.hpp"
 #include "nfcreaderprovider.hpp"
 #include "logicalaccess/cards/chip.hpp"
 #include <boost/filesystem.hpp>
+#include <boost/property_tree/ptree.hpp>
+#include <boost/date_time.hpp>
+#include <boost/property_tree/xml_parser.hpp>
+#include <thread>
 #include "readercardadapters/nfcreadercardadapter.hpp"
 #include "nfcdatatransport.hpp"
 #include "commands/mifarenfccommands.hpp"
@@ -407,7 +413,7 @@ namespace logicalaccess
 		return csn;
 	}
 
-    string NFCReaderUnit::getReaderSerialNumber()
+    std::string NFCReaderUnit::getReaderSerialNumber()
     {
         return "";
     }

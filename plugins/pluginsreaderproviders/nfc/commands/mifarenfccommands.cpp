@@ -14,6 +14,8 @@
 #include "mifarechip.hpp"
 #include "logicalaccess/cards/computermemorykeystorage.hpp"
 #include "logicalaccess/cards/readermemorykeystorage.hpp"
+#include "logicalaccess/logs.hpp"
+#include "logicalaccess/myexception.hpp"
 
 namespace logicalaccess
 {

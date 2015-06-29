@@ -6,6 +6,7 @@
 
 #include "nfcreaderunitconfiguration.hpp"
 #include "nfcreaderprovider.hpp"
+#include <boost/property_tree/ptree.hpp>
 
 namespace logicalaccess
 {

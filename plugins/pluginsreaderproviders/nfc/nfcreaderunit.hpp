@@ -11,6 +11,7 @@
 #include "nfcreaderunitconfiguration.hpp"
 
 #include "nfc/nfc.h"
+#include <map>
 
 namespace logicalaccess
 {

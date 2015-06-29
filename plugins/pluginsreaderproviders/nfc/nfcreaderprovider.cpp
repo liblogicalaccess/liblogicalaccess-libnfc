@@ -5,6 +5,7 @@
  */
 
 #include "nfcreaderprovider.hpp"
+#include "logicalaccess/myexception.hpp"
 
 #ifdef __unix__
 #include <stdlib.h>

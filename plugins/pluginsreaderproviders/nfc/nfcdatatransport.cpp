@@ -7,12 +7,15 @@
 #include "nfcdatatransport.hpp"
 #include "logicalaccess/cards/readercardadapter.hpp"
 #include "logicalaccess/bufferhelper.hpp"
+#include "logicalaccess/logs.hpp"
+#include "logicalaccess/myexception.hpp"
 #include "nfcreaderunit.hpp"
 
 #include <boost/foreach.hpp>
 #include <boost/optional.hpp>
 #include <boost/array.hpp>
 #include <boost/date_time/posix_time/posix_time.hpp>
+#include <boost/property_tree/ptree.hpp>
 #include <ctime>
 
 namespace logicalaccess
