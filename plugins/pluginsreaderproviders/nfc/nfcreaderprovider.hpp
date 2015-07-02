@@ -28,14 +28,10 @@ namespace logicalaccess
     public:
 
         /**
-         * \brief Get the NFCReaderProvider instance.
-         */
-        static std::shared_ptr<NFCReaderProvider> getSingletonInstance();
-
-        /**
-         * \brief Get a new NFCReaderProvider instance.
-         */
-        std::shared_ptr<NFCReaderProvider> createInstance();
+        * \brief Create a new NFC reader provider instance.
+        * \return The NFC reader provider instance.
+        */
+        static std::shared_ptr<NFCReaderProvider> createInstance();
 
         /**
          * \brief Destructor.

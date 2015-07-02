@@ -27,17 +27,6 @@ namespace logicalaccess
 			THROW_EXCEPTION_WITH_LOG(LibLogicalAccessException, "Unable to init libnfc");
     }
 
-    std::shared_ptr<NFCReaderProvider> NFCReaderProvider::getSingletonInstance()
-    {
-        static std::shared_ptr<NFCReaderProvider> instance;
-        if (!instance)
-        {
-            instance = std::shared_ptr<NFCReaderProvider>(new NFCReaderProvider());
-            instance->refreshReaderList();
-        }
-        return instance;
-    }
-
     std::shared_ptr<NFCReaderProvider> NFCReaderProvider::createInstance()
     {
         std::shared_ptr<NFCReaderProvider> instance = std::shared_ptr<NFCReaderProvider>(new NFCReaderProvider());

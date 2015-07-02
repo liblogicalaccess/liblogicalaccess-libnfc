@@ -25,7 +25,7 @@ extern "C"
     {
         if (rp != NULL)
         {
-            *rp = logicalaccess::NFCReaderProvider::getSingletonInstance();
+            *rp = logicalaccess::NFCReaderProvider::createInstance();
         }
     }
 
