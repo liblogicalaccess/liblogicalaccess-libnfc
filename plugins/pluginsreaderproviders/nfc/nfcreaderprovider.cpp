@@ -48,7 +48,8 @@ namespace logicalaccess
 
     std::shared_ptr<ReaderUnit> NFCReaderProvider::createReaderUnit()
     {
-        LOG(LogLevel::INFOS) << "Creating new reader unit";
+        LOG(LogLevel::INFOS) << "Creating default NFC reader unit. "
+        << "We will let libnfc pick a reader for us";
 
         std::shared_ptr<NFCReaderUnit> ret(new NFCReaderUnit(std::string("")));
         ret->setReaderProvider(std::weak_ptr<ReaderProvider>(shared_from_this()));
@@ -65,6 +66,7 @@ namespace logicalaccess
 		size_t device_count = nfc_list_devices(d_context, devices, 255);
 		for (size_t i = 0; i < device_count; ++i)
 		{
+            LOG(DEBUGS) << "Found available reader {" << devices[i] << "}";
 			std::shared_ptr<NFCReaderUnit> unit = NFCReaderUnit::createNFCReaderUnit(devices[i]);
 			unit->setReaderProvider(std::weak_ptr<ReaderProvider>(shared_from_this()));
 			d_readers.push_back(unit);

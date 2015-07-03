@@ -171,7 +171,7 @@ namespace logicalaccess
 					}
                     else
                     {
-                        disconnect();
+                        //disconnect();
                     }
 				}
 			}
@@ -243,7 +243,11 @@ namespace logicalaccess
 				modulation.nmt = NMT_ISO14443A;
 				modulation.nbr = NBR_106;
 
-				if (nfc_initiator_select_passive_target(d_device, modulation, d_chips[d_insertedChip].nti.nai.abtUid, d_chips[d_insertedChip].nti.nai.szUidLen, &pnti) >= 0)
+				if (nfc_initiator_select_passive_target(d_device,
+                                                        modulation,
+                                                        d_chips[d_insertedChip].nti.nai.abtUid,
+                                                        d_chips[d_insertedChip].nti.nai.szUidLen,
+                                                        &pnti) >= 0)
 				{
                     LOG(DEBUGS) << "Selected passive target.";
 					d_chip_connected = connected = true;
@@ -262,9 +266,9 @@ namespace logicalaccess
 			{
                 LOG(DEBUGS) << "Deselecting target";
 				nfc_initiator_deselect_target(d_device);
+                LOG(DEBUGS) << "Target deselected";
 			}
 		}
-
 		d_chip_connected = false;
     }
 
@@ -496,4 +500,5 @@ namespace logicalaccess
 		std::shared_ptr<ReaderUnit> reader = std::make_shared<NFCReaderUnit>(readerName);
 		return std::dynamic_pointer_cast<NFCReaderUnit>(reader);
 	}
+
 }
