@@ -47,15 +47,12 @@ ${include_readers} ${include_commands} ${include_services})
 set(SOURCE_LIB ${SRCS} ${source_readercardadapters} ${source_readers}
 ${source_commands} ${source_services})
 
-					
-set(LINK_OPT libnfc )
-
 add_library(
 	libnfc-nfcreaders
 	SHARED
 	${SOURCE_LIB}
 	${INCLUDE_LIB}
-    ${resourcerc}
+        ${resourcerc}
     )
 
 SET_TARGET_PROPERTIES(libnfc-nfcreaders PROPERTIES VERSION ${LIBLOGICALACCESS_VERSION_STRING})
@@ -79,7 +76,7 @@ target_link_libraries(
 	iso7816cards
 	iso15693cards
 	${LLA_NAME}
-	${LINK_OPT}
+	${LIBNFC_LIBRARY}
 )
 
 install ( FILES ${include} DESTINATION include/logicalaccess/plugins/readers/nfc )

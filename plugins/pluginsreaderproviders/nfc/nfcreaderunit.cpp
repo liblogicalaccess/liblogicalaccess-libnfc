@@ -110,6 +110,7 @@ namespace logicalaccess
 			LOG(LogLevel::INFOS) << "Waiting card insertion...";
 		}
 
+        assert(d_device);
 		if (d_device != NULL)
 		{
 			boost::posix_time::ptime currentDate = boost::posix_time::second_clock::local_time();
@@ -430,6 +431,7 @@ namespace logicalaccess
 
     bool NFCReaderUnit::connectToReader()
     {
+        LOG(INFOS) << "Attempting to connect to NFC reader \"" << d_name << "\"";
 		d_device = nfc_open(getNFCReaderProvider()->getContext(), d_name.c_str());
 		return (d_device != NULL);
     }
