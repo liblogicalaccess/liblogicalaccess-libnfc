@@ -10,7 +10,9 @@
 #include "logicalaccess/readerproviders/readerunit.hpp"
 #include "nfcreaderunitconfiguration.hpp"
 
+#ifndef _WIN64
 #include "nfc/nfc.h"
+#endif
 #include <map>
 
 namespace logicalaccess
@@ -159,19 +161,23 @@ namespace logicalaccess
 
 		static std::shared_ptr<NFCReaderUnit> createNFCReaderUnit(const std::string& readerName);
 
+#ifndef _WIN64
 		/**
 		* \brief Get the NFC device.
 		* \return The NFC device.
 		*/
 		nfc_device* getDevice() const { return d_device; };
+#endif
 
 	protected:
 
+        void refreshChipList();
+
+#ifndef _WIN64
 		std::string getCardTypeFromTarget(nfc_target target);
 
-		void refreshChipList();
-
 		std::vector<unsigned char> getCardSerialNumber(nfc_target target);
+#endif
 
     protected:
 
@@ -187,6 +193,7 @@ namespace logicalaccess
 
 		bool d_chip_connected;
 
+#ifndef _WIN64
 		/**
 		 * \brief The NFC device.
 		 */
@@ -197,6 +204,7 @@ namespace logicalaccess
 		 * \remarks This could be replaced by a context assigned to the chip but it would require LLA refactoring
 		 */
 		std::map<std::shared_ptr<Chip>, nfc_target> d_chips;
+#endif
     };
 }
 

@@ -582,6 +582,13 @@
 			<type>zip</type>
 		</dependency>
 		<dependency>
+			<groupId>lib.memory</groupId>
+			<artifactId>pcre3</artifactId>
+			<version>7.0.2632.17573</version>
+			<scope>compile</scope>
+			<type>zip</type>
+		</dependency>
+		<dependency>
 			<groupId>lib.readers</groupId>
 			<artifactId>libnfc</artifactId>
 			<version>1.7.1</version>

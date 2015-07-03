@@ -63,6 +63,7 @@ namespace logicalaccess
 			memset(returnedData, 0x00, sizeof(returnedData));
 			LOG(LogLevel::COMS) << "APDU command: " << BufferHelper::getHex(data);
 
+#ifndef _WIN64
 			int res = nfc_initiator_transceive_bytes(getNFCReaderUnit()->getDevice(), &data[0], data.size(), returnedData, sizeof(returnedData), 0);
 			if (res >= 0)
 			{
@@ -70,6 +71,7 @@ namespace logicalaccess
 			}
 			else
 				CheckNFCError(res);
+#endif
 		}
     }
 
@@ -83,6 +85,7 @@ namespace logicalaccess
 			msg += std::string(conv);
 			msg += std::string(". ");
 
+#ifndef _WIN64
 			switch (errorFlag)
 			{
 				case NFC_EIO:
@@ -125,6 +128,7 @@ namespace logicalaccess
 					msg += std::string("Device's internal chip error.");
 					break;
 			}
+#endif
 
 			THROW_EXCEPTION_WITH_LOG(CardException, msg);
 		}

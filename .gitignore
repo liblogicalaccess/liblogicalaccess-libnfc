@@ -4,6 +4,7 @@ Win32
 x64
 Release
 Debug
+install
 *.suo
 *.user
 VERSION
@@ -31,3 +32,4 @@ cmake_install.cmake
 /ZERO_CHECK.vcxproj.filters
 /liblogicalaccess-libnfc.opensdf
 /liblogicalaccess-libnfc.sln
+/install_manifest.txt
