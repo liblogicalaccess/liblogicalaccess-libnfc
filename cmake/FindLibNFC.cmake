@@ -2,6 +2,7 @@
 # Find LibNFC includes and library
 #
 #  LIBNFC_INCLUDE_DIRS - where to find nfc.h, nfc-types.h, etc.
+#  LIBNFC_LIBRARYDIR - where to find libnfc.lib, nfc.a, etc.
 #  LIBNFC_LIBRARIES   - List of libraries when using LibNFC.
 #  LIBNFC_FOUND       - True if LibNFC found.
 
@@ -24,8 +25,9 @@ FIND_PATH(LIBNFC_INCLUDE_DIRS nfc/nfc-types.h
   )
 
 set (LIBNFC ${LIBNFC_INCLUDE_DIRS})
-FIND_LIBRARY(LIBNFC_LIBRARY NAMES nfc
+FIND_LIBRARY(LIBNFC_LIBRARY NAMES libnfc nfc
   HINTS
+  ${LIBNFC_LIBRARYDIR}
   ${PC_LIBNFC_LIBDIR}
   ${PC_LIBNFC_LIBRARY_DIRS}
   )

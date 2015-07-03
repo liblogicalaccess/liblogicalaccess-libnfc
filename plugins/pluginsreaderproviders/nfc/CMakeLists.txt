@@ -76,7 +76,7 @@ target_link_libraries(
 	iso7816cards
 	iso15693cards
 	${LLA_NAME}
-	${LIBNFC_LIBRARY}
+	${LIBNFC_LIBRARIES}
 )
 
 install ( FILES ${include} DESTINATION include/logicalaccess/plugins/readers/nfc )
