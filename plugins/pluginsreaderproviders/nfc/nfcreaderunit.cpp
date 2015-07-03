@@ -37,6 +37,7 @@ namespace logicalaccess
 	#define NXP_MANUFACTURER_CODE 0x04
 	#define MAX_CANDIDATES 16
 
+#ifndef _WIN64
 	struct supported_tag {
 		const char *card_type;
 		uint8_t modulation_type;
@@ -61,9 +62,16 @@ namespace logicalaccess
 		//{ "MifareUltralightC", NMT_ISO14443A, 0x00, 0, 0, { 0x00 }, is_mifare_ultralightc_on_reader }, // Mifare UltraLightC
 		{ "MifareUltralight", NMT_ISO14443A, 0x00, 0, 0, { 0x00 }, NULL }, // Mifare UltraLight
 	};
+#endif
 
-    NFCReaderUnit::NFCReaderUnit(const std::string& name)
-		: ReaderUnit(), d_device(NULL), d_name(name), d_connectedName(name), d_chip_connected(false)
+    NFCReaderUnit::NFCReaderUnit(const std::string& name):
+        ReaderUnit(),
+#ifndef _WIN64
+        d_device(NULL),
+#endif
+        d_name(name),
+        d_connectedName(name),
+        d_chip_connected(false)
 	{
         d_readerUnitConfig.reset(new NFCReaderUnitConfiguration());
         setDefaultReaderCardAdapter(std::shared_ptr<NFCReaderCardAdapter>(new NFCReaderCardAdapter()));
@@ -110,7 +118,8 @@ namespace logicalaccess
 			LOG(LogLevel::INFOS) << "Waiting card insertion...";
 		}
 
-        if (d_device != NULL)
+#ifndef _WIN64
+		if (d_device != NULL)
 		{
 			boost::posix_time::ptime currentDate = boost::posix_time::second_clock::local_time();
 			boost::posix_time::ptime maxDate = currentDate + boost::posix_time::milliseconds(maxwait);
@@ -135,17 +144,18 @@ namespace logicalaccess
             THROW_EXCEPTION_WITH_LOG(LibLogicalAccessException,
                                      "No underlying libnfc reader associated with this object.");
         }
-
+#endif        
         return inserted;
     }
 
     bool NFCReaderUnit::waitRemoval(unsigned int maxwait)
-    {
+    {    
         LOG(DEBUGS) << "Waiting for card removal.";
         bool removed = false;
 
 		if (d_insertedChip)
 		{
+#ifndef _WIN64
 			if (d_chips.find(d_insertedChip) != d_chips.end())
 			{
                 // We check whether we can connect to a card or not.
@@ -179,6 +189,7 @@ namespace logicalaccess
 			{
 				removed = true;
 			}
+#endif
 		}
 		else
 		{
@@ -188,6 +199,7 @@ namespace logicalaccess
         return removed;
     }
 
+#ifndef _WIN64
 	std::string NFCReaderUnit::getCardTypeFromTarget(nfc_target target)
 	{
 		bool found = false;
@@ -223,6 +235,7 @@ namespace logicalaccess
 
 		return "";
 	}
+#endif
 
     bool NFCReaderUnit::connect()
     {
@@ -234,6 +247,7 @@ namespace logicalaccess
 
 		bool connected = d_chip_connected = false;
 
+#ifndef _WIN64
 		if (d_insertedChip && d_chips.find(d_insertedChip) != d_chips.end())
 		{
 			if (d_chips[d_insertedChip].nm.nmt == NMT_ISO14443A)
@@ -254,12 +268,14 @@ namespace logicalaccess
 				}
 			}
 		}
+#endif
 
 		return connected;
     }
 
     void NFCReaderUnit::disconnect()
     {
+#ifndef _WIN64
 		if (d_insertedChip && d_chips.find(d_insertedChip) != d_chips.end())
 		{
 			if (d_chips[d_insertedChip].nm.nmt == NMT_ISO14443A)
@@ -269,6 +285,7 @@ namespace logicalaccess
                 LOG(DEBUGS) << "Target deselected";
 			}
 		}
+#endif
 		d_chip_connected = false;
     }
 
@@ -345,15 +362,18 @@ namespace logicalaccess
     std::vector<std::shared_ptr<Chip> > NFCReaderUnit::getChipList()
     {
 		std::vector<std::shared_ptr<Chip> > v;
+#ifndef _WIN64
 		for (std::map<std::shared_ptr<Chip>, nfc_target>::iterator it = d_chips.begin(); it != d_chips.end(); ++it)
 		{
 			v.push_back(it->first);
 		}
+#endif
 		return v;
     }
 
 	void NFCReaderUnit::refreshChipList()
 	{
+#ifndef _WIN64
 		nfc_initiator_init(d_device);
 
 		// Drop the field for a while
@@ -407,8 +427,10 @@ namespace logicalaccess
 				}
 			}
 		}
+#endif
 	}
 
+#ifndef _WIN64
 	std::vector<unsigned char> NFCReaderUnit::getCardSerialNumber(nfc_target target)
 	{
 		std::vector<unsigned char> csn;
@@ -437,6 +459,7 @@ namespace logicalaccess
 
 		return csn;
 	}
+#endif
 
     std::string NFCReaderUnit::getReaderSerialNumber()
     {
@@ -455,7 +478,8 @@ namespace logicalaccess
 
     bool NFCReaderUnit::connectToReader()
     {
-        LOG(INFOS) << "Attempting to connect to NFC reader \"" << d_name << "\"";
+#ifndef _WIN64
+       LOG(INFOS) << "Attempting to connect to NFC reader \"" << d_name << "\"";
         if (d_name.empty())
         {
             d_device = nfc_open(getNFCReaderProvider()->getContext(), nullptr);
@@ -465,14 +489,19 @@ namespace logicalaccess
             d_device = nfc_open(getNFCReaderProvider()->getContext(), d_name.c_str());
         }
 		return (d_device != NULL);
+#else
+        return false;
+#endif
     }
 
     void NFCReaderUnit::disconnectFromReader()
     {
+#ifndef _WIN64
 		if (d_device != NULL)
 		{
 			nfc_close(d_device);
 		}
+#endif
     }
 
     void NFCReaderUnit::serialize(boost::property_tree::ptree& parentNode)

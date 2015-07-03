@@ -75,11 +75,13 @@ namespace logicalaccess
          */
         virtual std::shared_ptr<ReaderUnit> createReaderUnit();
 
+#ifndef _WIN64
 		/**
 		* \brief Get the NFC context.
 		* \return The NFC context.
 		*/
 		nfc_context* getContext() const { return d_context; };
+#endif
 
     protected:
 
@@ -93,10 +95,12 @@ namespace logicalaccess
          */
         ReaderList d_readers;
 
+#ifndef _WIN64
 		/**
 		 * \brief The NFC Context.
 		*/
 		nfc_context* d_context;
+#endif
     };
 }
 

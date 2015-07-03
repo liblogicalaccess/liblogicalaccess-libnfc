@@ -22,9 +22,11 @@ namespace logicalaccess
     NFCReaderProvider::NFCReaderProvider() :
         ReaderProvider()
     {
+#ifndef _WIN64
 		nfc_init(&d_context);
 		if (d_context == NULL)
 			THROW_EXCEPTION_WITH_LOG(LibLogicalAccessException, "Unable to init libnfc");
+#endif
     }
 
     std::shared_ptr<NFCReaderProvider> NFCReaderProvider::createInstance()
@@ -42,8 +44,10 @@ namespace logicalaccess
 
     void NFCReaderProvider::release()
     {
+#ifndef _WIN64
 		if (d_context != NULL)
 			nfc_exit(d_context);
+#endif
     }
 
     std::shared_ptr<ReaderUnit> NFCReaderProvider::createReaderUnit()
@@ -62,6 +66,7 @@ namespace logicalaccess
     {
         d_readers.clear();
 
+#ifndef _WIN64
 		nfc_connstring devices[255];
 		size_t device_count = nfc_list_devices(d_context, devices, 255);
 		for (size_t i = 0; i < device_count; ++i)
@@ -71,6 +76,7 @@ namespace logicalaccess
 			unit->setReaderProvider(std::weak_ptr<ReaderProvider>(shared_from_this()));
 			d_readers.push_back(unit);
 		}
+#endif
 
         return true;
     }
