@@ -110,8 +110,7 @@ namespace logicalaccess
 			LOG(LogLevel::INFOS) << "Waiting card insertion...";
 		}
 
-        assert(d_device);
-		if (d_device != NULL)
+        if (d_device != NULL)
 		{
 			boost::posix_time::ptime currentDate = boost::posix_time::second_clock::local_time();
 			boost::posix_time::ptime maxDate = currentDate + boost::posix_time::milliseconds(maxwait);
@@ -131,30 +130,49 @@ namespace logicalaccess
 				}
 			}
 		}
+        else
+        {
+            THROW_EXCEPTION_WITH_LOG(LibLogicalAccessException,
+                                     "No underlying libnfc reader associated with this object.");
+        }
 
         return inserted;
     }
 
     bool NFCReaderUnit::waitRemoval(unsigned int maxwait)
     {
+        LOG(DEBUGS) << "Waiting for card removal.";
         bool removed = false;
 
 		if (d_insertedChip)
 		{
 			if (d_chips.find(d_insertedChip) != d_chips.end())
 			{
-				boost::posix_time::ptime currentDate = boost::posix_time::second_clock::local_time();
+                // We check whether we can connect to a card or not.
+                boost::posix_time::ptime currentDate = boost::posix_time::second_clock::local_time();
 				boost::posix_time::ptime maxDate = currentDate + boost::posix_time::milliseconds(maxwait);
 
 				while (!removed && currentDate < maxDate)
 				{
-					nfc_target target = d_chips[d_insertedChip];
+                    // Call to nfc_initiator_deselect_target() (in disconnect()) causes
+                    // nfc_initiator_target_is_present() to return false.
+                    /*
+                    nfc_target target = d_chips[d_insertedChip];
 					removed = (nfc_initiator_target_is_present(d_device, &target) != NFC_SUCCESS);
+                    */
+
+                    // We attempt to connect. If we failed to connect, that means the card
+                    // has been removed.
+                    removed = !connect();
 					if (!removed)
 					{
 						currentDate = boost::posix_time::second_clock::local_time();
 						std::this_thread::sleep_for(std::chrono::milliseconds(50));
 					}
+                    else
+                    {
+                        disconnect();
+                    }
 				}
 			}
 			else
@@ -211,7 +229,7 @@ namespace logicalaccess
 		if (isConnected())
 		{
 			LOG(LogLevel::ERRORS) << EXCEPTION_MSG_CONNECTED;
-			disconnect();
+            disconnect();
 		}
 
 		bool connected = d_chip_connected = false;
@@ -227,6 +245,7 @@ namespace logicalaccess
 
 				if (nfc_initiator_select_passive_target(d_device, modulation, d_chips[d_insertedChip].nti.nai.abtUid, d_chips[d_insertedChip].nti.nai.szUidLen, &pnti) >= 0)
 				{
+                    LOG(DEBUGS) << "Selected passive target.";
 					d_chip_connected = connected = true;
 				}
 			}
@@ -241,6 +260,7 @@ namespace logicalaccess
 		{
 			if (d_chips[d_insertedChip].nm.nmt == NMT_ISO14443A)
 			{
+                LOG(DEBUGS) << "Deselecting target";
 				nfc_initiator_deselect_target(d_device);
 			}
 		}
@@ -432,7 +452,14 @@ namespace logicalaccess
     bool NFCReaderUnit::connectToReader()
     {
         LOG(INFOS) << "Attempting to connect to NFC reader \"" << d_name << "\"";
-		d_device = nfc_open(getNFCReaderProvider()->getContext(), d_name.c_str());
+        if (d_name.empty())
+        {
+            d_device = nfc_open(getNFCReaderProvider()->getContext(), nullptr);
+        }
+        else
+        {
+            d_device = nfc_open(getNFCReaderProvider()->getContext(), d_name.c_str());
+        }
 		return (d_device != NULL);
     }
 
