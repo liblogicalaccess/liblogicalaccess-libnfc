@@ -78,7 +78,9 @@ namespace logicalaccess
          */
         virtual std::shared_ptr<Chip> createChip(std::string type);
 
-        /**
+        virtual std::vector<unsigned char> getNumber(std::shared_ptr<Chip> chip) override;
+
+/**
          * \brief Get the first and/or most accurate chip found.
          * \return The single chip.
          */

@@ -144,25 +144,26 @@ namespace logicalaccess
             THROW_EXCEPTION_WITH_LOG(LibLogicalAccessException,
                                      "No underlying libnfc reader associated with this object.");
         }
-#endif        
+#endif
         return inserted;
     }
 
     bool NFCReaderUnit::waitRemoval(unsigned int maxwait)
     {    
         LOG(DEBUGS) << "Waiting for card removal.";
+        std::chrono::steady_clock::time_point wait_until(std::chrono::steady_clock::now()
+                                                         + std::chrono::milliseconds(maxwait));
         bool removed = false;
 
 		if (d_insertedChip)
 		{
+            LogDisabler ld;
 #ifndef _WIN64
 			if (d_chips.find(d_insertedChip) != d_chips.end())
 			{
                 // We check whether we can connect to a card or not.
-                boost::posix_time::ptime currentDate = boost::posix_time::second_clock::local_time();
-				boost::posix_time::ptime maxDate = currentDate + boost::posix_time::milliseconds(maxwait);
 
-				while (!removed && currentDate < maxDate)
+				while (!removed && (std::chrono::steady_clock::now() < wait_until || maxwait == 0))
 				{
                     // Call to nfc_initiator_deselect_target() (in disconnect()) causes
                     // nfc_initiator_target_is_present() to return false.
@@ -176,12 +177,12 @@ namespace logicalaccess
                     removed = !connect();
 					if (!removed)
 					{
-						currentDate = boost::posix_time::second_clock::local_time();
 						std::this_thread::sleep_for(std::chrono::milliseconds(50));
 					}
                     else
                     {
-                        //disconnect();
+                        d_chips.clear();
+                        d_insertedChip = nullptr;
                     }
 				}
 			}
@@ -257,15 +258,29 @@ namespace logicalaccess
 				modulation.nmt = NMT_ISO14443A;
 				modulation.nbr = NBR_106;
 
-				if (nfc_initiator_select_passive_target(d_device,
-                                                        modulation,
-                                                        d_chips[d_insertedChip].nti.nai.abtUid,
-                                                        d_chips[d_insertedChip].nti.nai.szUidLen,
-                                                        &pnti) >= 0)
+                // prevent infinite wait. Setting this in connectToReader() did not work
+                // for unkown reason.
+                nfc_device_set_property_bool(d_device, NP_INFINITE_SELECT, false);
+
+                int ret = nfc_initiator_select_passive_target(d_device,
+                                                              modulation,
+                                                              d_chips[d_insertedChip].nti.nai.abtUid,
+                                                              d_chips[d_insertedChip].nti.nai.szUidLen,
+                                                              &pnti);
+                if (ret > 0)
 				{
                     LOG(DEBUGS) << "Selected passive target.";
 					d_chip_connected = connected = true;
+                    d_insertedChip->setChipIdentifier(getCardSerialNumber(d_chips[d_insertedChip]));
 				}
+                else if (ret == 0)
+                {
+                    LOG(DEBUGS) << "No target found when selecting passive NFC target.";
+                }
+                else
+                {
+                    LOG(ERRORS) << "NFC Error: " << nfc_strerror(d_device);
+                }
 			}
 		}
 #endif
@@ -278,7 +293,7 @@ namespace logicalaccess
 #ifndef _WIN64
 		if (d_insertedChip && d_chips.find(d_insertedChip) != d_chips.end())
 		{
-			if (d_chips[d_insertedChip].nm.nmt == NMT_ISO14443A)
+            if (d_chips[d_insertedChip].nm.nmt == NMT_ISO14443A)
 			{
                 LOG(DEBUGS) << "Deselecting target";
 				nfc_initiator_deselect_target(d_device);
@@ -530,4 +545,12 @@ namespace logicalaccess
 		return std::dynamic_pointer_cast<NFCReaderUnit>(reader);
 	}
 
+    std::vector<unsigned char> NFCReaderUnit::getNumber(std::shared_ptr<Chip> chip)
+    {
+        if (d_chips.count(chip))
+        {
+            return getCardSerialNumber(d_chips.at(chip));
+        }
+        return ReaderUnit::getNumber(chip);
+    }
 }
