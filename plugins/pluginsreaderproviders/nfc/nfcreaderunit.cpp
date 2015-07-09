@@ -515,6 +515,7 @@ namespace logicalaccess
 		if (d_device != NULL)
 		{
 			nfc_close(d_device);
+            d_device = nullptr;
 		}
 #endif
     }

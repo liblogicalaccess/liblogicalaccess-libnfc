@@ -82,7 +82,6 @@ else()
 endif()
 
 add_subdirectory(plugins/pluginsreaderproviders)
-add_subdirectory(tests)
 
 if ( NOT DEFINED LIBLOGICALACCESS_CMAKE_CONFIG_DIR )
   set ( LIBLOGICALACCESS_CMAKE_CONFIG_DIR lib/${LIB_SUFFIX}/cmake/liblogicalaccess )
