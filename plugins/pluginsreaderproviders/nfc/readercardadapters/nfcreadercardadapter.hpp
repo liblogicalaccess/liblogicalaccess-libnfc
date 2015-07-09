@@ -48,6 +48,12 @@ namespace logicalaccess
          */
         virtual std::vector<unsigned char> adaptAnswer(const std::vector<unsigned char>& answer);
 
+        /**
+         * We override this because a 0 byte return is valid with libnfc.
+         */
+        virtual std::vector<unsigned char> sendCommand(
+                const std::vector<unsigned char> &command, long timeout = 3000) override;
+
     protected:
     };
 }

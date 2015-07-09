@@ -65,7 +65,6 @@ namespace logicalaccess
         command.push_back(static_cast<unsigned char>(keytype));
 		command.push_back(blockno);
 		command.insert(command.end(), d_keys[keyno].begin(), d_keys[keyno].end());
-		command.insert(command.end(), d_keys[keyno].begin(), d_keys[keyno].end());
 		std::vector<unsigned char> csn = getChip()->getChipIdentifier();
 		command.insert(command.end(), csn.end() - 4, csn.end());
 
@@ -130,10 +129,10 @@ namespace logicalaccess
 		std::vector<unsigned char> command;
 		command.push_back(0xC1);
 		command.push_back(blockno);
-		command.push_back(static_cast<unsigned char>((value >> 24) & 0xff));
-		command.push_back(static_cast<unsigned char>((value >> 16) & 0xff));
-		command.push_back(static_cast<unsigned char>((value >> 8) & 0xff));
-		command.push_back(static_cast<unsigned char>(value & 0xff));
+        command.push_back(static_cast<unsigned char>(value & 0xff));
+        command.push_back(static_cast<unsigned char>((value >> 8) & 0xff));
+        command.push_back(static_cast<unsigned char>((value >> 16) & 0xff));
+        command.push_back(static_cast<unsigned char>((value >> 24) & 0xff));
 
 		getNFCReaderCardAdapter()->sendCommand(command);
 	}
@@ -143,10 +142,10 @@ namespace logicalaccess
 		std::vector<unsigned char> command;
 		command.push_back(0xC0);
 		command.push_back(blockno);
-		command.push_back(static_cast<unsigned char>((value >> 24) & 0xff));
-		command.push_back(static_cast<unsigned char>((value >> 16) & 0xff));
-		command.push_back(static_cast<unsigned char>((value >> 8) & 0xff));
-		command.push_back(static_cast<unsigned char>(value & 0xff));
+        command.push_back(static_cast<unsigned char>(value & 0xff));
+        command.push_back(static_cast<unsigned char>((value >> 8) & 0xff));
+        command.push_back(static_cast<unsigned char>((value >> 16) & 0xff));
+        command.push_back(static_cast<unsigned char>((value >> 24) & 0xff));
 
 		getNFCReaderCardAdapter()->sendCommand(command);
 	}

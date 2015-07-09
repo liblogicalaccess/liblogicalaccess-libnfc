@@ -65,6 +65,7 @@ namespace logicalaccess
 
 #ifndef _WIN64
 			int res = nfc_initiator_transceive_bytes(getNFCReaderUnit()->getDevice(), &data[0], data.size(), returnedData, sizeof(returnedData), 0);
+            LOG(DEBUGS) << "Received " << res << " bytes from the NFC reader.";
 			if (res >= 0)
 			{
 				d_response = std::vector<unsigned char>(returnedData, returnedData + res);
@@ -81,7 +82,7 @@ namespace logicalaccess
 		{
 			char conv[64];
 			std::string msg = std::string("NFC error : ");
-			sprintf(conv, "%x", errorFlag);
+			sprintf(conv, "%d", errorFlag);
 			msg += std::string(conv);
 			msg += std::string(". ");
 

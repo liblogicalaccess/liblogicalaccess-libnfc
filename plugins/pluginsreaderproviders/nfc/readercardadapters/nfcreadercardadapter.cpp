@@ -29,4 +29,26 @@ namespace logicalaccess
     {
         return answer;
     }
+
+    std::vector<unsigned char> NFCReaderCardAdapter::sendCommand(
+            const std::vector<unsigned char> &command, long timeout)
+    {
+        std::vector<unsigned char> res;
+
+        if (d_dataTransport)
+        {
+            res = adaptAnswer(d_dataTransport->sendCommand(adaptCommand(command), timeout));
+
+            if (res.size() > 0 && getResultChecker())
+            {
+                LOG(LogLevel::DEBUGS) << "Call ResultChecker..." << BufferHelper::getHex(res);
+                getResultChecker()->CheckResult(&res[0], res.size());
+            }
+        }
+        else
+        {
+            LOG(LogLevel::ERRORS) << "Cannot transmit the command, data transport is not set!";
+        }
+        return res;
+    }
 }
