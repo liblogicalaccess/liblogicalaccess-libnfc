@@ -171,9 +171,18 @@ namespace logicalaccess
 		nfc_device* getDevice() const { return d_device; };
 #endif
 
+        void writeChipUid(std::shared_ptr<Chip> c, const std::vector<uint8_t> &new_uid);
+
 	protected:
 
         void refreshChipList();
+
+        /**
+        * Transmit bit using the NFC reader.
+        * This API circumvent all the abstraction provided by reader card adapter and
+        * data transport.
+        */
+        std::vector<uint8_t> transmitBits(const uint8_t *pbtTx, const size_t szTxBits);
 
 #ifndef _WIN64
 		std::string getCardTypeFromTarget(nfc_target target);
@@ -207,6 +216,22 @@ namespace logicalaccess
 		 */
 		std::map<std::shared_ptr<Chip>, nfc_target> d_chips;
 #endif
+
+    private:
+        /**
+         * Change the NFC reader's config to perform rawer operation for changing the uid.
+         * In the destructor, returns the configuration is more normal mode.
+         */
+        struct WriteUIDConfigGuard
+        {
+            WriteUIDConfigGuard(NFCReaderUnit &ru);
+            ~WriteUIDConfigGuard();
+
+        private:
+            NFCReaderUnit &ru_;
+            bool rca_error_flag_;
+            bool dt_error_flag_;
+        };
     };
 }
 
