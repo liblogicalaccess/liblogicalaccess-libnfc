@@ -25,7 +25,6 @@ add_executable(${TARGET_NAME} ${SOURCE_FILENAME}.cpp)
 target_link_libraries(${TARGET_NAME}
  lla-tests
  ${LIBLOGICALACCESS_LIBRARY}
- logicalaccess
  logicalaccess-cryptolib
  libnfc-nfcreaders
  ${Boost_LIBRARIES}
