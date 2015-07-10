@@ -29,6 +29,7 @@
 #include "commands/desfireev1iso7816commands.hpp"
 #include "commands/desfireiso7816resultchecker.hpp"
 #include "iso7816resultchecker.hpp"
+#include "nfcreaderunit.hpp"
 
 namespace logicalaccess
 {
@@ -548,15 +549,18 @@ namespace logicalaccess
 
     std::vector<unsigned char> NFCReaderUnit::getNumber(std::shared_ptr<Chip> chip)
     {
+#ifndef _WIN64
         if (d_chips.count(chip))
         {
             return getCardSerialNumber(d_chips.at(chip));
         }
+#endif 
         return ReaderUnit::getNumber(chip);
     }
 
     std::vector<uint8_t> NFCReaderUnit::transmitBits(const uint8_t *pbtTx, const size_t szTxBits)
-    {
+	{
+#ifndef _WIN64
         const int MAX_FRAME_LEN = 264;
         uint8_t abtRx[MAX_FRAME_LEN];
         int szRxBits;
@@ -569,11 +573,14 @@ namespace logicalaccess
         }
 
         return std::vector<uint8_t>(std::begin(abtRx), std::begin(abtRx) + szRxBits / 8 + 1);
+#endif 
+		return{};
     }
 
     void NFCReaderUnit::writeChipUid(std::shared_ptr<Chip> c,
                                      const std::vector<uint8_t> &new_uid)
-    {
+	{
+#ifndef _WIN64
         WriteUIDConfigGuard config_guard(*this);
         assert(new_uid.size() == 4);
         LOG(DEBUGS) << "Attempting to change the UID of a card. "
@@ -608,11 +615,13 @@ namespace logicalaccess
             nfct.nti.nai.abtUid[i] = new_uid[i];
         d_chips[c] = nfct;
         c->setChipIdentifier(new_uid);
+#endif
     }
 
     NFCReaderUnit::WriteUIDConfigGuard::WriteUIDConfigGuard(NFCReaderUnit &ru) :
             ru_(ru)
     {
+#ifndef _WIN64
         int ret;
         // Configure the CRC
         ret = nfc_device_set_property_bool(ru.getDevice(), NP_HANDLE_CRC, false);
@@ -628,10 +637,12 @@ namespace logicalaccess
         rca_error_flag_ = ru.getDefaultNFCReaderCardAdapter()->ignoreAllError(true);
         dt_error_flag_ = std::dynamic_pointer_cast<NFCDataTransport>(ru.getDefaultNFCReaderCardAdapter()->getDataTransport())
                 ->ignoreAllError(true);
-    }
+#endif
+	}
 
     NFCReaderUnit::WriteUIDConfigGuard::~WriteUIDConfigGuard()
-    {
+	{
+#ifndef _WIN64
         int ret;
         // Configure the CRC
         ret = nfc_device_set_property_bool(ru_.getDevice(), NP_HANDLE_CRC, true);
@@ -646,5 +657,6 @@ namespace logicalaccess
         ru_.getDefaultNFCReaderCardAdapter()->ignoreAllError(rca_error_flag_);
         std::dynamic_pointer_cast<NFCDataTransport>(ru_.getDefaultNFCReaderCardAdapter()->getDataTransport())
                 ->ignoreAllError(dt_error_flag_);
+#endif
     }
 }
