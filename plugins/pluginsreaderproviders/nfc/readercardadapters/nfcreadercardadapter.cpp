@@ -11,7 +11,8 @@
 
 namespace logicalaccess
 {
-    NFCReaderCardAdapter::NFCReaderCardAdapter()
+    NFCReaderCardAdapter::NFCReaderCardAdapter() :
+            ignore_error_(false)
     {
         d_dataTransport.reset(new NFCDataTransport());
     }
@@ -38,6 +39,8 @@ namespace logicalaccess
         if (d_dataTransport)
         {
             res = adaptAnswer(d_dataTransport->sendCommand(adaptCommand(command), timeout));
+            if (ignore_error_)
+                return res;
 
             if (res.size() > 0 && getResultChecker())
             {
@@ -50,5 +53,17 @@ namespace logicalaccess
             LOG(LogLevel::ERRORS) << "Cannot transmit the command, data transport is not set!";
         }
         return res;
+    }
+
+    bool NFCReaderCardAdapter::ignoreAllError(bool ignore)
+    {
+        bool tmp = ignore_error_;
+        ignore_error_ = ignore;
+        return tmp;
+    }
+
+    bool NFCReaderCardAdapter::ignoreAllError() const
+    {
+        return ignore_error_;
     }
 }

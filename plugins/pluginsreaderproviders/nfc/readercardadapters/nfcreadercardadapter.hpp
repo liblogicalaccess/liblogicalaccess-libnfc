@@ -54,7 +54,22 @@ namespace logicalaccess
         virtual std::vector<unsigned char> sendCommand(
                 const std::vector<unsigned char> &command, long timeout = 3000) override;
 
+        /**
+         * Set the Ignore All Error flag to `ignore`.
+         *
+         * This is useful when we want to do hacky thing that are expected to
+         * raise error.
+         * It returns the previous value of the flag.
+         */
+        bool ignoreAllError(bool ignore);
+
+        /**
+         * Return the value of the Ignore All Error flag
+         */
+        bool ignoreAllError() const;
+
     protected:
+        bool ignore_error_;
     };
 }
 

@@ -21,7 +21,8 @@
 namespace logicalaccess
 {
     NFCDataTransport::NFCDataTransport()
-        : DataTransport()
+        : DataTransport(),
+          ignore_error_(false)
     {
     }
 
@@ -70,8 +71,8 @@ namespace logicalaccess
 			{
 				d_response = std::vector<unsigned char>(returnedData, returnedData + res);
 			}
-			else
-				CheckNFCError(res);
+			else if (!ignore_error_)
+                CheckNFCError(res);
 #endif
 		}
     }
@@ -178,5 +179,17 @@ namespace logicalaccess
         LOG(LogLevel::COMS) << "Response received successfully ! Reponse: " << BufferHelper::getHex(res) << " size {" << res.size() << "}";
 
         return res;
+    }
+
+    bool NFCDataTransport::ignoreAllError(bool ignore)
+    {
+        bool tmp = ignore_error_;
+        ignore_error_ = ignore;
+        return tmp;
+    }
+
+    bool NFCDataTransport::ignoreAllError() const
+    {
+        return ignore_error_;
     }
 }

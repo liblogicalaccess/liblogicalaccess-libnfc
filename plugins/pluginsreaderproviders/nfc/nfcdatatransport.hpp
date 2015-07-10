@@ -112,11 +112,26 @@ namespace logicalaccess
 		*/
 		static void CheckNFCError(int errorFlag);
 
+        /**
+       * Set the Ignore All Error flag to `ignore`.
+       *
+       * This is useful when we want to do hacky thing that are expected to
+       * raise error.
+       * It returns the previous value (before your change).
+       */
+        bool ignoreAllError(bool ignore);
+
+        /**
+         * Return the value of the Ignore All Error flag
+         */
+        bool ignoreAllError() const;
+
     protected:
-		
 		bool d_isConnected;
 
 		std::vector<unsigned char> d_response;
+
+        bool ignore_error_;
     };
 }
 
