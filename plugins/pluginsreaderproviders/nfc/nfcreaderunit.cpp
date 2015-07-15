@@ -569,7 +569,8 @@ namespace logicalaccess
         if ((szRxBits = nfc_initiator_transceive_bits(d_device, pbtTx, szTxBits, NULL, abtRx, sizeof(abtRx), NULL)) < 0)
         {
             LOG(ERRORS) << "NFC write bits error: " << std::string(nfc_strerror(d_device));
-            return {};
+            THROW_EXCEPTION_WITH_LOG(LibLogicalAccessException,
+                                     "Writing bits to NFC reader failed: " + std::string(nfc_strerror(d_device)));
         }
 
         return std::vector<uint8_t>(std::begin(abtRx), std::begin(abtRx) + szRxBits / 8 + 1);
@@ -644,13 +645,11 @@ namespace logicalaccess
 	{
 #ifndef _WIN64
         int ret;
-        // Configure the CRC
+        // Revert the various flag to their default value
         ret = nfc_device_set_property_bool(ru_.getDevice(), NP_HANDLE_CRC, true);
         assert(ret >= 0);
-        // Use raw send/receive methods
         ret = nfc_device_set_property_bool(ru_.getDevice(), NP_EASY_FRAMING, true);
         assert(ret >= 0);
-        // Disable 14443-4 autoswitching
         ret = nfc_device_set_property_bool(ru_.getDevice(), NP_AUTO_ISO14443_4, true);
         assert(ret >= 0);
 
