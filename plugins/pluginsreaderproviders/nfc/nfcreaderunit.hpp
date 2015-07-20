@@ -10,6 +10,9 @@
 #include "logicalaccess/readerproviders/readerunit.hpp"
 #include "nfcreaderunitconfiguration.hpp"
 
+#include "logicalaccess/logs.hpp"
+#include "logicalaccess/myexception.hpp"
+
 #ifndef _WIN64
 #include "nfc/nfc.h"
 #endif
@@ -218,6 +221,20 @@ namespace logicalaccess
 #endif
 
     private:
+		/**
+		 * Call a libnfc function and throw an exception is the return code is non zero.
+		 */
+		template<typename TargetFunction, typename ...Args>
+		int nfc_safe_call(TargetFunction fct, Args... arg)
+		{
+			int ret = fct(arg...);
+			if (ret != 0)
+			{
+				THROW_EXCEPTION_WITH_LOG(LibLogicalAccessException, "NFC error: " + std::string(nfc_strerror(d_device)));
+			}
+			return ret;
+		}
+
         /**
          * Change the NFC reader's config to perform rawer operation for changing the uid.
          * In the destructor, returns the configuration is more normal mode.

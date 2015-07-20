@@ -4,6 +4,7 @@
  * \brief NFC reader provider.
  */
 
+#include <algorithm>
 #include "nfcreaderprovider.hpp"
 #include "logicalaccess/myexception.hpp"
 
@@ -46,7 +47,10 @@ namespace logicalaccess
     {
 #ifndef _WIN64
 		if (d_context != NULL)
+		{
 			nfc_exit(d_context);
+			d_context = nullptr;
+		}
 #endif
     }
 
@@ -64,20 +68,33 @@ namespace logicalaccess
 
     bool NFCReaderProvider::refreshReaderList()
     {
-        d_readers.clear();
-
 #ifndef _WIN64
-		nfc_connstring devices[255];
-		size_t device_count = nfc_list_devices(d_context, devices, 255);
-		for (size_t i = 0; i < device_count; ++i)
+        nfc_connstring devices[255];
+        size_t device_count = nfc_list_devices(d_context, devices, 255);
+        LOG(DEBUGS) << "Found " << device_count << " devices.";
+        for (size_t i = 0; i < device_count; ++i)
+        {
+            auto itr = std::find_if(d_readers.begin(), d_readers.end(),
+                                    [&](std::shared_ptr<ReaderUnit> ru)
+                                    {
+                                        return ru->getName() == devices[i];
+                                    });
+            if (itr == d_readers.end())
+            {
+				LOG(DEBUGS) << "THIS = " << this << "  - Found available reader{ " << devices[i] << " }";
+                std::shared_ptr<NFCReaderUnit> unit =
+                    NFCReaderUnit::createNFCReaderUnit(devices[i]);
+                unit->setReaderProvider(
+                    std::weak_ptr<ReaderProvider>(shared_from_this()));
+                d_readers.push_back(unit);
+            }
+        }
+        LOG(DEBUGS) << "THIS = " << this << "  - Reader list size = " << d_readers.size();
+		for (auto ru : d_readers)
 		{
-            LOG(DEBUGS) << "Found available reader {" << devices[i] << "}";
-			std::shared_ptr<NFCReaderUnit> unit = NFCReaderUnit::createNFCReaderUnit(devices[i]);
-			unit->setReaderProvider(std::weak_ptr<ReaderProvider>(shared_from_this()));
-			d_readers.push_back(unit);
+			LOG(DEBUGS) << "THIS = " << this << "  - Reader name: {" << ru->getName() << "} CONNECTED NAME = {" << ru->getConnectedName() << "}";
 		}
 #endif
-
         return true;
     }
 }

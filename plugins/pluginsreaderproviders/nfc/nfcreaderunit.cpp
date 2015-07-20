@@ -5,6 +5,7 @@
  */
 
 #include "nfcreaderunit.hpp"
+#include "nfc_helper.hpp"
 
 #include <iostream>
 #include <iomanip>
@@ -261,7 +262,7 @@ namespace logicalaccess
 
                 // prevent infinite wait. Setting this in connectToReader() did not work
                 // for unkown reason.
-                nfc_device_set_property_bool(d_device, NP_INFINITE_SELECT, false);
+				nfc_safe_call(nfc_device_set_property_bool, d_device, NP_INFINITE_SELECT, false);
 
                 int ret = nfc_initiator_select_passive_target(d_device,
                                                               modulation,
@@ -390,18 +391,19 @@ namespace logicalaccess
 	void NFCReaderUnit::refreshChipList()
 	{
 #ifndef _WIN64
-		nfc_initiator_init(d_device);
+
+		nfc_safe_call(nfc_initiator_init, d_device);
 
 		// Drop the field for a while
-		nfc_device_set_property_bool(d_device, NP_ACTIVATE_FIELD, false);
+		nfc_safe_call(nfc_device_set_property_bool, d_device, NP_ACTIVATE_FIELD, false);
 
 		// Configure the CRC and Parity settings
-		nfc_device_set_property_bool(d_device, NP_HANDLE_CRC, true);
-		nfc_device_set_property_bool(d_device, NP_HANDLE_PARITY, true);
-		nfc_device_set_property_bool(d_device, NP_AUTO_ISO14443_4, true);
+		nfc_safe_call(nfc_device_set_property_bool, d_device, NP_HANDLE_CRC, true);
+		nfc_safe_call(nfc_device_set_property_bool, d_device, NP_HANDLE_PARITY, true);
+		nfc_safe_call(nfc_device_set_property_bool, d_device, NP_AUTO_ISO14443_4, true);
 
 		// Enable field so more power consuming cards can power themselves up
-		nfc_device_set_property_bool(d_device, NP_ACTIVATE_FIELD, true);
+		nfc_safe_call(nfc_device_set_property_bool, d_device, NP_ACTIVATE_FIELD, true);
 
 		// Poll for a ISO14443A (MIFARE) tag
 		nfc_target candidates[MAX_CANDIDATES];
@@ -410,7 +412,7 @@ namespace logicalaccess
 		modulation.nmt = NMT_ISO14443A;
 		modulation.nbr = NBR_106;
 		if ((candidates_count = nfc_initiator_list_passive_targets(d_device, modulation, candidates, MAX_CANDIDATES)) < 0)
-			throw new LibLogicalAccessException("ISO14443A nfc_initiator_list_passive_targets error");
+			throw LibLogicalAccessException("ISO14443A nfc_initiator_list_passive_targets error");
 
 		for (int c = 0; c < candidates_count; c++)
 		{
@@ -429,7 +431,7 @@ namespace logicalaccess
 		modulation.nmt = NMT_FELICA;
 		modulation.nbr = NBR_424; // FIXME NBR_212 should also be supported
 		if ((candidates_count = nfc_initiator_list_passive_targets(d_device, modulation, candidates, MAX_CANDIDATES)) < 0)
-			throw new LibLogicalAccessException("FELICA nfc_initiator_list_passive_targets error");
+			throw LibLogicalAccessException("FELICA nfc_initiator_list_passive_targets error");
 
 		for (int c = 0; c < candidates_count; c++)
 		{
@@ -504,6 +506,10 @@ namespace logicalaccess
         {
             d_device = nfc_open(getNFCReaderProvider()->getContext(), d_name.c_str());
         }
+		if (d_device == nullptr)
+		{
+			LOG(ERRORS) << "Failed to instanciate NFC device: " << std::string(nfc_strerror(d_device));
+		}
 		return (d_device != NULL);
 #else
         return false;

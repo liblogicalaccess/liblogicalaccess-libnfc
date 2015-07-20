@@ -73,7 +73,7 @@ namespace logicalaccess
          * param port The reader port
          * \return A reader unit.
          */
-        virtual std::shared_ptr<ReaderUnit> createReaderUnit();
+        virtual std::shared_ptr<ReaderUnit> createReaderUnit() override;
 
 #ifndef _WIN64
 		/**
