@@ -5,7 +5,6 @@
  */
 
 #include "nfcreaderunit.hpp"
-#include "nfc_helper.hpp"
 
 #include <iostream>
 #include <iomanip>
