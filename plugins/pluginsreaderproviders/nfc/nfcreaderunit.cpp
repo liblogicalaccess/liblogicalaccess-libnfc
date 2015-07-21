@@ -574,8 +574,9 @@ namespace logicalaccess
         if ((szRxBits = nfc_initiator_transceive_bits(d_device, pbtTx, szTxBits, NULL, abtRx, sizeof(abtRx), NULL)) < 0)
         {
             LOG(ERRORS) << "NFC write bits error: " << std::string(nfc_strerror(d_device));
-            THROW_EXCEPTION_WITH_LOG(LibLogicalAccessException,
-                                     "Writing bits to NFC reader failed: " + std::string(nfc_strerror(d_device)));
+        //    THROW_EXCEPTION_WITH_LOG(LibLogicalAccessException,
+        //                             "Writing bits to NFC reader failed: " + std::string(nfc_strerror(d_device)));
+            return {};
         }
 
         return std::vector<uint8_t>(std::begin(abtRx), std::begin(abtRx) + szRxBits / 8 + 1);
@@ -593,6 +594,7 @@ namespace logicalaccess
                 "This will work only on some non-original \"backup card\"";
 
         std::vector<uint8_t> abtHalt = {0x50, 0x00, 0x00, 0x00};
+        uint8_t wakeUp[1] = {0x52};
 
         // special unlock command
         uint8_t abtUnlock1[1] = {0x40};
@@ -612,6 +614,9 @@ namespace logicalaccess
         getDefaultNFCReaderCardAdapter()->sendCommand(abtUnlock2);
         getDefaultNFCReaderCardAdapter()->sendCommand(abtWrite);
         getDefaultNFCReaderCardAdapter()->sendCommand(abtData);
+
+        getDefaultNFCReaderCardAdapter()->sendCommand(abtHalt);
+        transmitBits(wakeUp, 7);
 
         // if we reach this point, the UID was changed. However since error are
         // disabled, we a are very likely to reach this point...
