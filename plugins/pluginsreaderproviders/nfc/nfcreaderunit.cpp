@@ -507,7 +507,7 @@ namespace logicalaccess
         }
 		if (d_device == nullptr)
 		{
-			LOG(ERRORS) << "Failed to instanciate NFC device: " << std::string(nfc_strerror(d_device));
+			LOG(ERRORS) << "Failed to instanciate NFC device.";
 		}
 		return (d_device != NULL);
 #else
