@@ -46,6 +46,10 @@ int main(int ac, char **av)
                "Chip is not a Mifare1K, but is " + chip->getCardType() +
                        " instead.");
 
+    PRINT_TIME("Reader name = " << readerUnit->getName());
+    PRINT_TIME("Reader connected name = " << readerUnit->getConnectedName());
+
+    //return 0;
     auto nfc_ru = std::dynamic_pointer_cast<logicalaccess::NFCReaderUnit>(readerUnit);
     LLA_ASSERT(nfc_ru, "ReaderUnit is not NFC.");
 

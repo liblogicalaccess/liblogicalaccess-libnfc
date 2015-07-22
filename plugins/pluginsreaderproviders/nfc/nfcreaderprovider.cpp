@@ -15,6 +15,7 @@
 
 #include <sstream>
 #include <iomanip>
+#include <assert.h>
 
 #include "nfcreaderunit.hpp"
 
@@ -23,11 +24,9 @@ namespace logicalaccess
     NFCReaderProvider::NFCReaderProvider() :
         ReaderProvider()
     {
-#ifndef _WIN64
 		nfc_init(&d_context);
 		if (d_context == NULL)
 			THROW_EXCEPTION_WITH_LOG(LibLogicalAccessException, "Unable to init libnfc");
-#endif
     }
 
     std::shared_ptr<NFCReaderProvider> NFCReaderProvider::createInstance()
@@ -45,13 +44,11 @@ namespace logicalaccess
 
     void NFCReaderProvider::release()
     {
-#ifndef _WIN64
 		if (d_context != NULL)
 		{
 			nfc_exit(d_context);
 			d_context = nullptr;
 		}
-#endif
     }
 
     std::shared_ptr<ReaderUnit> NFCReaderProvider::createReaderUnit()
@@ -61,6 +58,9 @@ namespace logicalaccess
 
         std::shared_ptr<NFCReaderUnit> ret(new NFCReaderUnit(std::string("")));
         ret->setReaderProvider(std::weak_ptr<ReaderProvider>(shared_from_this()));
+        ret->connectToReader();
+        ret->fetchRealName();
+        ret->disconnectFromReader();
         d_readers.push_back(ret);
 
         return ret;
@@ -68,7 +68,6 @@ namespace logicalaccess
 
     bool NFCReaderProvider::refreshReaderList()
     {
-#ifndef _WIN64
         nfc_connstring devices[255];
         size_t device_count = nfc_list_devices(d_context, devices, 255);
         LOG(DEBUGS) << "Found " << device_count << " devices.";
@@ -87,6 +86,9 @@ namespace logicalaccess
                 unit->setReaderProvider(
                     std::weak_ptr<ReaderProvider>(shared_from_this()));
                 d_readers.push_back(unit);
+                //unit->connectToReader();
+                //unit->fetchRealName();
+                //unit->disconnectFromReader();
             }
         }
         LOG(DEBUGS) << "THIS = " << this << "  - Reader list size = " << d_readers.size();
@@ -94,7 +96,6 @@ namespace logicalaccess
 		{
 			LOG(DEBUGS) << "THIS = " << this << "  - Reader name: {" << ru->getName() << "} CONNECTED NAME = {" << ru->getConnectedName() << "}";
 		}
-#endif
         return true;
     }
 }

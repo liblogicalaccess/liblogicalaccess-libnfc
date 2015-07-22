@@ -13,9 +13,7 @@
 #include "logicalaccess/logs.hpp"
 #include "logicalaccess/myexception.hpp"
 
-#ifndef _WIN64
 #include "nfc/nfc.h"
-#endif
 #include <map>
 
 namespace logicalaccess
@@ -166,15 +164,18 @@ namespace logicalaccess
 
 		static std::shared_ptr<NFCReaderUnit> createNFCReaderUnit(const std::string& readerName);
 
-#ifndef _WIN64
 		/**
 		* \brief Get the NFC device.
 		* \return The NFC device.
 		*/
 		nfc_device* getDevice() const { return d_device; };
-#endif
 
         void writeChipUid(std::shared_ptr<Chip> c, const std::vector<uint8_t> &new_uid);
+
+        /**
+         * Fetch the reader name by asking it.
+         */
+        std::string fetchRealName();
 
 	protected:
 
@@ -187,13 +188,9 @@ namespace logicalaccess
         */
         std::vector<uint8_t> transmitBits(const uint8_t *pbtTx, const size_t szTxBits);
 
-#ifndef _WIN64
 		std::string getCardTypeFromTarget(nfc_target target);
 
 		std::vector<unsigned char> getCardSerialNumber(nfc_target target);
-#endif
-
-    protected:
 
 		/**
 		 * \brief The reader unit name.
@@ -207,7 +204,6 @@ namespace logicalaccess
 
 		bool d_chip_connected;
 
-#ifndef _WIN64
 		/**
 		 * \brief The NFC device.
 		 */
@@ -218,7 +214,6 @@ namespace logicalaccess
 		 * \remarks This could be replaced by a context assigned to the chip but it would require LLA refactoring
 		 */
 		std::map<std::shared_ptr<Chip>, nfc_target> d_chips;
-#endif
 
     private:
 		/**
