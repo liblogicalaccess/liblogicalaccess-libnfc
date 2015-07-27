@@ -582,9 +582,9 @@
 			<type>zip</type>
 		</dependency>
 		<dependency>
-			<groupId>lib.memory</groupId>
-			<artifactId>pcre3</artifactId>
-			<version>7.0.2632.17573</version>
+			<groupId>lib.readers</groupId>
+			<artifactId>libusb</artifactId>
+			<version>1.2.6.0</version>
 			<scope>compile</scope>
 			<type>zip</type>
 		</dependency>
