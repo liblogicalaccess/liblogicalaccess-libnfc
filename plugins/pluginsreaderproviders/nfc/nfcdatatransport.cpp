@@ -53,26 +53,40 @@ namespace logicalaccess
 
     void NFCDataTransport::send(const std::vector<unsigned char>& data)
     {
-		d_response.clear();
+        d_response.clear();
 
-		EXCEPTION_ASSERT_WITH_LOG(getNFCReaderUnit(), LibLogicalAccessException, "The NFC reader unit object"
-			"is null. We cannot send.");
+        EXCEPTION_ASSERT_WITH_LOG(getNFCReaderUnit(), LibLogicalAccessException,
+                                  "The NFC reader unit object "
+                                  "is null. We cannot send.");
 
-		if (data.size() > 0)
-		{
-			unsigned char returnedData[255];
-			memset(returnedData, 0x00, sizeof(returnedData));
-			LOG(LogLevel::COMS) << "APDU command: " << BufferHelper::getHex(data);
+        if (data.size() > 0)
+        {
+            unsigned char returnedData[255];
+            memset(returnedData, 0x00, sizeof(returnedData));
+            LOG(LogLevel::COMS) << "APDU command: "
+                                << BufferHelper::getHex(data);
 
-			int res = nfc_initiator_transceive_bytes(getNFCReaderUnit()->getDevice(), &data[0], data.size(), returnedData, sizeof(returnedData), 0);
-            LOG(DEBUGS) << "Received " << res << " bytes from the NFC reader.";
-			if (res >= 0)
+            int res = nfc_initiator_transceive_bytes(
+                getNFCReaderUnit()->getDevice(), &data[0], data.size(),
+                returnedData, sizeof(returnedData), 0);
+            if (res == NFC_EMFCAUTHFAIL)
+            {
+                // If the authentication command fail against a Mifare Classic,
+                // the card is unusable unless we re-select it again. Calling
+                // connect() on the reader unit does the job.
+                getReaderUnit()->connect();
+            }
+            if (res >= 0)
 			{
-				d_response = std::vector<unsigned char>(returnedData, returnedData + res);
-			}
-			else if (!ignore_error_)
+				LOG(DEBUGS) << "Received " << res << " bytes from the NFC reader.";
+                d_response = std::vector<unsigned char>(returnedData,
+                                                        returnedData + res);
+            }
+            else if (!ignore_error_)
+            {
                 CheckNFCError(res);
-		}
+            }
+        }
     }
 
 	void NFCDataTransport::CheckNFCError(int errorFlag)
