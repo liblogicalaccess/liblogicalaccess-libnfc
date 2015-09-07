@@ -38,6 +38,7 @@ find_package(LibNFC REQUIRED)
 include_directories(${LIBNFC_INCLUDE_DIRS})
 
 include_directories(packages/include)
+link_directories(${LIBLOGICALACCESS_PLUGINS_DIR})
 
 if(UNIX)
   if (DEFINED LIBLOGICALACCESS_INCLUDE_DIRS)
