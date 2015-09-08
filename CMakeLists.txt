@@ -4,6 +4,13 @@ if (NOT DEFINED CMAKE_BUILD_TYPE)
   set(CMAKE_BUILD_TYPE "Debug" CACHE STRING "Build type" )
 endif()
 
+if (NOT DEFINED LIBLOGICALACCESS_INCLUDE_DIR)
+  set(LIBLOGICALACCESS_INCLUDE_DIR "/usr/include" CACHE STRING "LLA Include" )
+endif()
+
+if (NOT DEFINED LIBLOGICALACCESS_PLUGINS_DIR)
+  set(LIBLOGICALACCESS_PLUGINS_DIR "/usr/lib/logicalaccess" CACHE STRING "LLA Lib" )
+endif()
 
 project(liblogicalaccess-libnfc)
 
