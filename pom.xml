@@ -570,7 +570,7 @@
 		<dependency>
 			<groupId>eu.islog.lib.readers</groupId>
 			<artifactId>liblogicalaccess</artifactId>
-			<version>1.80.0-SNAPSHOT</version>
+			<version>1.79.0</version>
 			<scope>compile</scope>
 			<type>zip</type>
 		</dependency>
