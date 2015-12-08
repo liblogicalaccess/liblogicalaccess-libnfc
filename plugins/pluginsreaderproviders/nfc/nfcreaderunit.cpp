@@ -196,7 +196,7 @@ namespace logicalaccess
 	std::string NFCReaderUnit::getCardTypeFromTarget(nfc_target target)
 	{
 		bool found = false;
-		struct supported_tag *tag_info;
+		struct supported_tag *tag_info = nullptr;
 
 		/* Ensure the target is supported */
 		for (size_t i = 0; i < sizeof(supported_tags) / sizeof(struct supported_tag); i++)
