@@ -1,7 +1,11 @@
 #include <string>
 #include <memory>
+#include "logicalaccess/cards/chip.hpp"
+#include "logicalaccess/services/cardservice.hpp"
+#include "logicalaccess/cards/commands.hpp"
 #include "logicalaccess/readerproviders/readerprovider.hpp"
 #include "nfcreaderprovider.hpp"
+#include "commands/mifareclassicuidchangerservice.hpp"
 
 #ifdef _MSC_VER
 #include "logicalaccess/msliblogicalaccess.h"
@@ -47,5 +51,27 @@ extern "C"
         }
 
         return ret;
+    }
+
+    LIBLOGICALACCESS_API void getCardService(std::shared_ptr<logicalaccess::Chip> c,
+                                             std::shared_ptr<logicalaccess::CardService> &service,
+                                             logicalaccess::CardServiceType type)
+    {
+        // Only support UIDChanger service.
+        if (type != logicalaccess::CST_UID_CHANGER)
+            return;
+
+        // We must first fetch the reader unit and make sure its a NFCReaderUnit,
+        // otherwise we cannot create the Service.
+        if (!c || !c->getCommands() || !c->getCommands()->getReaderCardAdapter() ||
+            !c->getCommands()->getReaderCardAdapter()->getDataTransport() ||
+            !c->getCommands()->getReaderCardAdapter()->getDataTransport()->getReaderUnit())
+        {
+            return;
+        }
+        if (c->getCardType() == "Mifare1K" || c->getCardType() == "Mifare4K")
+        {
+            service = std::make_shared<logicalaccess::MifareClassicUIDChangerService>(c);
+        }
     }
 }

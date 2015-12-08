@@ -21,6 +21,7 @@ namespace logicalaccess
     class Profile;
 	class NFCReaderCardAdapter;
     class NFCReaderProvider;
+    class MifareClassicUIDChangerService;
 
     /**
      * \brief The NFC reader unit class.
@@ -170,14 +171,19 @@ namespace logicalaccess
 		*/
 		nfc_device* getDevice() const { return d_device; };
 
-        void writeChipUid(std::shared_ptr<Chip> c, const std::vector<uint8_t> &new_uid);
-
         /**
          * Fetch the reader name by asking it.
          */
         std::string fetchRealName();
 
 	protected:
+        /**
+         * Requests the change of an UID for a card.
+         *
+         * It is excepted that the card will be a Mifare Classic card.
+         */
+        void writeChipUid(std::shared_ptr<Chip> c,
+                          const std::vector<uint8_t> &new_uid);
 
         void refreshChipList();
 
@@ -244,6 +250,8 @@ namespace logicalaccess
             bool rca_error_flag_;
             bool dt_error_flag_;
         };
+
+        friend class MifareClassicUIDChangerService;
     };
 }
 
