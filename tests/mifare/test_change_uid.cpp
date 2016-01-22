@@ -32,6 +32,7 @@ void introduction()
 
 int main(int ac, char **av)
 {
+    using namespace logicalaccess;
     prologue(ac, av);
     introduction();
     ReaderProviderPtr provider;
