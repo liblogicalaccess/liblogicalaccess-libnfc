@@ -12,6 +12,7 @@
 
 #include "../nfcreaderprovider.hpp"
 #include "mifarechip.hpp"
+#include "mifarelocation.hpp"
 #include "logicalaccess/cards/computermemorykeystorage.hpp"
 #include "logicalaccess/cards/readermemorykeystorage.hpp"
 #include "logicalaccess/logs.hpp"
@@ -28,29 +29,27 @@ namespace logicalaccess
     {
     }
 
-    bool MifareNFCCommands::loadKey(unsigned char keyno, MifareKeyType keytype, const void* key, size_t keylen, bool vol)
+    bool MifareNFCCommands::loadKey(unsigned char keyno, MifareKeyType keytype, std::shared_ptr<MifareKey> key, bool vol)
     {
-		d_keys[keyno] = std::vector<unsigned char>(static_cast<const unsigned char *>(key), static_cast<const unsigned char *>(key) + keylen);
+        d_keys[keyno] = std::vector<unsigned char>(key->getData(), key->getData() + key->getLength());
 
 		return true;
     }
 
-    void MifareNFCCommands::loadKey(std::shared_ptr<Location> location, std::shared_ptr<Key> key, MifareKeyType keytype)
+    void MifareNFCCommands::loadKey(std::shared_ptr<Location> location, MifareKeyType keytype, std::shared_ptr<MifareKey> key)
     {
         EXCEPTION_ASSERT_WITH_LOG(location, std::invalid_argument, "location cannot be null.");
         EXCEPTION_ASSERT_WITH_LOG(key, std::invalid_argument, "key cannot be null.");
 
         std::shared_ptr<MifareLocation> mLocation = std::dynamic_pointer_cast<MifareLocation>(location);
-        std::shared_ptr<MifareKey> mKey = std::dynamic_pointer_cast<MifareKey>(key);
 
         EXCEPTION_ASSERT_WITH_LOG(mLocation, std::invalid_argument, "location must be a MifareLocation.");
-        EXCEPTION_ASSERT_WITH_LOG(mKey, std::invalid_argument, "key must be a MifareKey.");
 
         std::shared_ptr<KeyStorage> key_storage = key->getKeyStorage();
 
         if (std::dynamic_pointer_cast<ComputerMemoryKeyStorage>(key_storage))
         {
-            loadKey(0, keytype, key->getData(), key->getLength());
+            loadKey(0, keytype, key);
         }
         else
         {

@@ -64,7 +64,7 @@ namespace logicalaccess
 	};
 
     NFCReaderUnit::NFCReaderUnit(const std::string& name):
-        ReaderUnit(),
+        ReaderUnit(READER_NFC),
         d_device(NULL),
         d_name(name),
         d_connectedName(name),
