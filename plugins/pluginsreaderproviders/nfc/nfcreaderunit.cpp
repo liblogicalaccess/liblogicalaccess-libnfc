@@ -26,9 +26,9 @@
 #include "readercardadapters/nfcreadercardadapter.hpp"
 #include "nfcdatatransport.hpp"
 #include "commands/mifarenfccommands.hpp"
-#include "commands/desfireev1iso7816commands.hpp"
-#include "commands/desfireiso7816resultchecker.hpp"
-#include "iso7816resultchecker.hpp"
+#include "iso7816/commands/desfireev1iso7816commands.hpp"
+#include "iso7816/commands/desfireiso7816resultchecker.hpp"
+#include "iso7816/iso7816resultchecker.hpp"
 #include "nfcreaderunit.hpp"
 
 namespace logicalaccess

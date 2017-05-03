@@ -7,7 +7,7 @@
 #ifndef LOGICALACCESS_DEFAULTNFCREADERCARDADAPTER_HPP
 #define LOGICALACCESS_DEFAULTNFCREADERCARDADAPTER_HPP
 
-#include "readercardadapters/iso7816readercardadapter.hpp"
+#include "iso7816/readercardadapters/iso7816readercardadapter.hpp"
 #include "../nfcreaderprovider.hpp"
 
 #include <string>

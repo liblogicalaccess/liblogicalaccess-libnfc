@@ -7,18 +7,12 @@ if (WIN32)
 endif()
 
 if (WIN32)
-  set(INCLUDE_FOLDER ${CMAKE_CURRENT_SOURCE_DIR}/../../../packages/include/logicalaccess/plugins/readers/iso7816
-  ${CMAKE_CURRENT_SOURCE_DIR}/../../../packages/include/logicalaccess/plugins/cards/iso7816
-  ${CMAKE_CURRENT_SOURCE_DIR}/../../../packages/include/logicalaccess/plugins/cards/desfire
-  ${CMAKE_CURRENT_SOURCE_DIR}/../../../packages/include/logicalaccess/plugins/cards/samav2
-  ${CMAKE_CURRENT_SOURCE_DIR}/../../../packages/include/logicalaccess/plugins/cards/mifare
+  set(INCLUDE_FOLDER ${CMAKE_CURRENT_SOURCE_DIR}/../../../packages/include/logicalaccess/plugins/readers/
+  ${CMAKE_CURRENT_SOURCE_DIR}/../../../packages/include/logicalaccess/plugins/cards/
   )
 else ()
-set(INCLUDE_FOLDER ${LIBLOGICALACCESS_INCLUDE_DIR} ${LIBLOGICALACCESS_INCLUDE_DIR}/logicalaccess/plugins/readers/iso7816
-  ${LIBLOGICALACCESS_INCLUDE_DIR}/logicalaccess/plugins/cards/iso7816
-  ${LIBLOGICALACCESS_INCLUDE_DIR}/logicalaccess/plugins/cards/desfire
-  ${LIBLOGICALACCESS_INCLUDE_DIR}/logicalaccess/plugins/cards/samav2
-  ${LIBLOGICALACCESS_INCLUDE_DIR}/logicalaccess/plugins/cards/mifare
+set(INCLUDE_FOLDER ${LIBLOGICALACCESS_INCLUDE_DIR} ${LIBLOGICALACCESS_INCLUDE_DIR}/logicalaccess/plugins/readers/
+  ${LIBLOGICALACCESS_INCLUDE_DIR}/logicalaccess/plugins/cards/
   ${LIBLOGICALACCESS_INCLUDE_DIR}/logicalaccess/
     )
 endif()
