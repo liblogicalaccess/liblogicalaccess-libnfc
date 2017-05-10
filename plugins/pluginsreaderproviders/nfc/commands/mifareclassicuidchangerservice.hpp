@@ -6,7 +6,7 @@ namespace logicalaccess
 {
 class NFCReaderUnit;
 
-class MifareClassicUIDChangerService : public UIDChangerService {
+class LIBLOGICALACCESS_API MifareClassicUIDChangerService : public UIDChangerService {
 
       public:
         MifareClassicUIDChangerService(std::shared_ptr<Chip>);
