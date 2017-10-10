@@ -49,32 +49,32 @@ namespace logicalaccess
 	};
 
 	struct supported_tag supported_tags[] = {
-		{ "FeliCA", NMT_FELICA, 0x00, 0, 0, { 0x00 }, NULL }, // FeliCA
-		{ "Mifare1K", NMT_ISO14443A, 0x08, 0, 0, { 0x00 }, NULL }, // Mifare Classic 1k
-		{ "Mifare1K", NMT_ISO14443A, 0x28, 0, 0, { 0x00 }, NULL }, // Mifare Classic 1k (Emulated)
-		{ "Mifare1K", NMT_ISO14443A, 0x68, 0, 0, { 0x00 }, NULL }, // Mifare Classic 1k (Emulated)
-		{ "Mifare1K", NMT_ISO14443A, 0x88, 0, 0, { 0x00 }, NULL }, // Infineon Mifare Classic 1k
-		{ "Mifare4K", NMT_ISO14443A, 0x18, 0, 0, { 0x00 }, NULL }, // Mifare Classic 4k
-		{ "Mifare4K", NMT_ISO14443A, 0x38, 0, 0, { 0x00 }, NULL }, // Mifare Classic 4k (Emulated)
-		{ "DESFireEV1", NMT_ISO14443A, 0x20, 5, 4, { 0x75, 0x77, 0x81, 0x02 /*, 0xXX */ }, NULL }, // Mifare DESFire
-		{ "DESFireEV1", NMT_ISO14443A, 0x60, 4, 3, { 0x78, 0x33, 0x88 /*, 0xXX */ }, NULL }, // Cyanogenmod card emulation
-		{ "DESFireEV1", NMT_ISO14443A, 0x60, 4, 3, { 0x78, 0x80, 0x70 /*, 0xXX */ }, NULL }, // Android HCE
+		{ "FeliCA", NMT_FELICA, 0x00, 0, 0, { 0x00 }, nullptr }, // FeliCA
+		{ "Mifare1K", NMT_ISO14443A, 0x08, 0, 0, { 0x00 }, nullptr }, // Mifare Classic 1k
+		{ "Mifare1K", NMT_ISO14443A, 0x28, 0, 0, { 0x00 }, nullptr }, // Mifare Classic 1k (Emulated)
+		{ "Mifare1K", NMT_ISO14443A, 0x68, 0, 0, { 0x00 }, nullptr }, // Mifare Classic 1k (Emulated)
+		{ "Mifare1K", NMT_ISO14443A, 0x88, 0, 0, { 0x00 }, nullptr }, // Infineon Mifare Classic 1k
+		{ "Mifare4K", NMT_ISO14443A, 0x18, 0, 0, { 0x00 }, nullptr }, // Mifare Classic 4k
+		{ "Mifare4K", NMT_ISO14443A, 0x38, 0, 0, { 0x00 }, nullptr }, // Mifare Classic 4k (Emulated)
+		{ "DESFireEV1", NMT_ISO14443A, 0x20, 5, 4, { 0x75, 0x77, 0x81, 0x02 /*, 0xXX */ }, nullptr }, // Mifare DESFire
+		{ "DESFireEV1", NMT_ISO14443A, 0x60, 4, 3, { 0x78, 0x33, 0x88 /*, 0xXX */ }, nullptr }, // Cyanogenmod card emulation
+		{ "DESFireEV1", NMT_ISO14443A, 0x60, 4, 3, { 0x78, 0x80, 0x70 /*, 0xXX */ }, nullptr }, // Android HCE
 		//{ "MifareUltralightC", NMT_ISO14443A, 0x00, 0, 0, { 0x00 }, is_mifare_ultralightc_on_reader }, // Mifare UltraLightC
-		{ "MifareUltralight", NMT_ISO14443A, 0x00, 0, 0, { 0x00 }, NULL }, // Mifare UltraLight
+		{ "MifareUltralight", NMT_ISO14443A, 0x00, 0, 0, { 0x00 }, nullptr }, // Mifare UltraLight
 	};
 
     NFCReaderUnit::NFCReaderUnit(const std::string& name):
         ReaderUnit(READER_NFC),
-        d_device(NULL),
         d_name(name),
         d_connectedName(name),
-        d_chip_connected(false)
+        d_chip_connected(false),
+        d_device(nullptr)
 	{
         d_readerUnitConfig.reset(new NFCReaderUnitConfiguration());
-        setDefaultReaderCardAdapter(std::shared_ptr<NFCReaderCardAdapter>(new NFCReaderCardAdapter()));
+		ReaderUnit::setDefaultReaderCardAdapter(std::make_shared<NFCReaderCardAdapter>());
 
         std::shared_ptr<NFCDataTransport> dataTransport(new NFCDataTransport());
-        setDataTransport(dataTransport);
+		ReaderUnit::setDataTransport(dataTransport);
         d_card_type = "UNKNOWN";
 
         try
@@ -88,7 +88,7 @@ namespace logicalaccess
 
     NFCReaderUnit::~NFCReaderUnit()
     {
-        disconnectFromReader();
+	    NFCReaderUnit::disconnectFromReader();
     }
 
     std::string NFCReaderUnit::getName() const
@@ -115,7 +115,7 @@ namespace logicalaccess
 			LOG(LogLevel::INFOS) << "Waiting card insertion...";
 		}
 
-		if (d_device != NULL)
+		if (d_device != nullptr)
 		{
 			boost::posix_time::ptime currentDate = boost::posix_time::second_clock::local_time();
 			boost::posix_time::ptime maxDate = currentDate + boost::posix_time::milliseconds(maxwait);
@@ -193,9 +193,8 @@ namespace logicalaccess
         return removed;
     }
 
-	std::string NFCReaderUnit::getCardTypeFromTarget(nfc_target target)
+	std::string NFCReaderUnit::getCardTypeFromTarget(nfc_target target) const
 	{
-		bool found = false;
 		struct supported_tag *tag_info = nullptr;
 
 		/* Ensure the target is supported */
@@ -207,23 +206,21 @@ namespace logicalaccess
 			if (target.nm.nmt == NMT_FELICA)
 			{
 				tag_info = &(supported_tags[i]);
-				found = true;
 				break;
 			}
 			if ((target.nm.nmt == NMT_ISO14443A) && ((target.nti.nai.szUidLen == 4) || (target.nti.nai.abtUid[0] == NXP_MANUFACTURER_CODE)) &&
 				(target.nti.nai.btSak == supported_tags[i].SAK) &&
 				(!supported_tags[i].ATS_min_length || ((target.nti.nai.szAtsLen >= supported_tags[i].ATS_min_length) &&
 				(0 == memcmp(target.nti.nai.abtAts, supported_tags[i].ATS, supported_tags[i].ATS_compare_length)))) &&
-				((supported_tags[i].check_tag_on_reader == NULL) ||
+				((supported_tags[i].check_tag_on_reader == nullptr) ||
 				supported_tags[i].check_tag_on_reader(d_device, target.nti.nai)))
 			{
 				tag_info = &(supported_tags[i]);
-				found = true;
 				break;
 			}
 		}
 
-		if (tag_info != NULL)
+		if (tag_info != nullptr)
 			return tag_info->card_type;
 
 		return "";
@@ -237,7 +234,7 @@ namespace logicalaccess
             disconnect();
 		}
 
-		bool connected = d_chip_connected = false;
+		bool connected = (d_chip_connected = false);
 
 		if (d_insertedChip && d_chips.find(d_insertedChip) != d_chips.end())
 		{
@@ -486,12 +483,12 @@ namespace logicalaccess
 		{
 			LOG(ERRORS) << "Failed to instanciate NFC device.";
 		}
-		return (d_device != NULL);
+		return (d_device != nullptr);
     }
 
     void NFCReaderUnit::disconnectFromReader()
     {
-		if (d_device != NULL)
+		if (d_device != nullptr)
 		{
 			nfc_close(d_device);
             d_device = nullptr;
@@ -533,14 +530,14 @@ namespace logicalaccess
         return ReaderUnit::getNumber(chip);
     }
 
-    std::vector<uint8_t> NFCReaderUnit::transmitBits(const uint8_t *pbtTx, const size_t szTxBits)
-	{
+    std::vector<uint8_t> NFCReaderUnit::transmitBits(const uint8_t *pbtTx, const size_t szTxBits) const
+    {
         const int MAX_FRAME_LEN = 264;
         uint8_t abtRx[MAX_FRAME_LEN];
         int szRxBits;
 
         // Transmit the bit frame command, we don't use the arbitrary parity feature
-        if ((szRxBits = nfc_initiator_transceive_bits(d_device, pbtTx, szTxBits, NULL, abtRx, sizeof(abtRx), NULL)) < 0)
+        if ((szRxBits = nfc_initiator_transceive_bits(d_device, pbtTx, szTxBits, nullptr, abtRx, sizeof(abtRx), nullptr)) < 0)
         {
             LOG(ERRORS) << "NFC write bits error: " << std::string(nfc_strerror(d_device));
         //    THROW_EXCEPTION_WITH_LOG(LibLogicalAccessException,
@@ -641,7 +638,6 @@ namespace logicalaccess
 				d_connectedName = name;
             return d_connectedName;
         }
-        else
-            return d_connectedName = "CANNOT_FETCH_NAME";
+	    return d_connectedName = "CANNOT_FETCH_NAME";
     }
 }

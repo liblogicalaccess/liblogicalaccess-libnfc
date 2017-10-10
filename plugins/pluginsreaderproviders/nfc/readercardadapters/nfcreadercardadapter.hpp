@@ -39,19 +39,19 @@ namespace logicalaccess
          * \param command The command to send.
          * \return The adapted command to send.
          */
-        virtual std::vector<unsigned char> adaptCommand(const std::vector<unsigned char>& command);
+	    std::vector<unsigned char> adaptCommand(const std::vector<unsigned char>& command) override;
 
         /**
          * \brief Adapt the asnwer received from the reader.
          * \param answer The answer received.
          * \return The adapted answer received.
          */
-        virtual std::vector<unsigned char> adaptAnswer(const std::vector<unsigned char>& answer);
+	    std::vector<unsigned char> adaptAnswer(const std::vector<unsigned char>& answer) override;
 
         /**
          * We override this because a 0 byte return is valid with libnfc.
          */
-        virtual std::vector<unsigned char> sendCommand(
+	    std::vector<unsigned char> sendCommand(
                 const std::vector<unsigned char> &command, long timeout = 3000) override;
 
         /**

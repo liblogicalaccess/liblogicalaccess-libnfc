@@ -21,10 +21,10 @@
 namespace logicalaccess
 {
     NFCDataTransport::NFCDataTransport()
-        : DataTransport(),
-          ignore_error_(false)
-    {
-    }
+		: DataTransport(), d_isConnected(false),
+		  ignore_error_(false)
+	{
+	}
 
     NFCDataTransport::~NFCDataTransport()
     {
@@ -140,13 +140,14 @@ namespace logicalaccess
 				case NFC_ECHIP:
 					msg += std::string("Device's internal chip error.");
 					break;
+			default: ;
 			}
 
 			THROW_EXCEPTION_WITH_LOG(CardException, msg);
 		}
 	}
 
-    std::vector<unsigned char> NFCDataTransport::receive(long int timeout)
+    std::vector<unsigned char> NFCDataTransport::receive(long int /*timeout*/)
     {
 		std::vector<unsigned char> r = d_response;
 		LOG(LogLevel::COMS) << "APDU response: " << BufferHelper::getHex(r);
@@ -168,7 +169,7 @@ namespace logicalaccess
 		parentNode.add_child(getDefaultXmlNodeName(), node);
 	}
 
-	void NFCDataTransport::unSerialize(boost::property_tree::ptree& node)
+	void NFCDataTransport::unSerialize(boost::property_tree::ptree& /*node*/)
 	{
 
 	}
@@ -177,14 +178,13 @@ namespace logicalaccess
     {
         LOG(LogLevel::COMS) << "Sending command " << BufferHelper::getHex(command) << " command size {" << command.size() << "} timeout {" << timeout << "}...";
 
-        std::vector<unsigned char> res;
-        d_lastCommand = command;
+	    d_lastCommand = command;
         d_lastResult.clear();
 
         if (command.size() > 0)
             send(command);
 
-        res = receive(timeout);
+        std::vector<unsigned char> res = receive(timeout);
         d_lastResult = res;
         LOG(LogLevel::COMS) << "Response received successfully ! Reponse: " << BufferHelper::getHex(res) << " size {" << res.size() << "}";
 

@@ -29,7 +29,7 @@ namespace logicalaccess
     {
     }
 
-    bool MifareNFCCommands::loadKey(unsigned char keyno, MifareKeyType keytype, std::shared_ptr<MifareKey> key, bool vol)
+    bool MifareNFCCommands::loadKey(unsigned char keyno, MifareKeyType /*keytype*/, std::shared_ptr<MifareKey> key, bool /*vol*/)
     {
         d_keys[keyno] = std::vector<unsigned char>(key->getData(), key->getData() + key->getLength());
 

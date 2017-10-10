@@ -13,7 +13,7 @@ namespace logicalaccess
     NFCReaderUnitConfiguration::NFCReaderUnitConfiguration()
         : ReaderUnitConfiguration(READER_NFC)
     {
-        resetConfiguration();
+	    NFCReaderUnitConfiguration::resetConfiguration();
     }
 
     NFCReaderUnitConfiguration::~NFCReaderUnitConfiguration()
@@ -31,7 +31,7 @@ namespace logicalaccess
         parentNode.add_child(getDefaultXmlNodeName(), node);
     }
 
-    void NFCReaderUnitConfiguration::unSerialize(boost::property_tree::ptree& node)
+    void NFCReaderUnitConfiguration::unSerialize(boost::property_tree::ptree& /*node*/)
     {
         
     }

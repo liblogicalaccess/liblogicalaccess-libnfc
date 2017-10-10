@@ -25,7 +25,7 @@ namespace logicalaccess
         ReaderProvider()
     {
 		nfc_init(&d_context);
-		if (d_context == NULL)
+		if (d_context == nullptr)
 			THROW_EXCEPTION_WITH_LOG(LibLogicalAccessException, "Unable to init libnfc");
     }
 
@@ -39,12 +39,12 @@ namespace logicalaccess
 
     NFCReaderProvider::~NFCReaderProvider()
     {
-        release();
+	    NFCReaderProvider::release();
     }
 
     void NFCReaderProvider::release()
     {
-		if (d_context != NULL)
+		if (d_context != nullptr)
 		{
 			nfc_exit(d_context);
 			d_context = nullptr;
