@@ -20,186 +20,171 @@
 
 namespace logicalaccess
 {
-    NFCDataTransport::NFCDataTransport()
-		: DataTransport(), d_isConnected(false),
-		  ignore_error_(false)
-	{
-	}
+NFCDataTransport::NFCDataTransport()
+    : DataTransport()
+    , d_isConnected(false)
+    , ignore_error_(false)
+{
+}
 
-    NFCDataTransport::~NFCDataTransport()
+NFCDataTransport::~NFCDataTransport()
+{
+}
+
+bool NFCDataTransport::connect()
+{
+    d_isConnected = true;
+    return true;
+}
+
+void NFCDataTransport::disconnect()
+{
+    d_isConnected = false;
+}
+
+bool NFCDataTransport::isConnected()
+{
+    return d_isConnected;
+}
+
+std::string NFCDataTransport::getName() const
+{
+    return getNFCReaderUnit()->getName();
+}
+
+void NFCDataTransport::send(const std::vector<unsigned char> &data)
+{
+    d_response.clear();
+
+    EXCEPTION_ASSERT_WITH_LOG(getNFCReaderUnit(), LibLogicalAccessException,
+                              "The NFC reader unit object "
+                              "is null. We cannot send.");
+
+    if (data.size() > 0)
     {
-    }
+        unsigned char returnedData[255];
+        memset(returnedData, 0x00, sizeof(returnedData));
+        LOG(LogLevel::COMS) << "APDU command: " << BufferHelper::getHex(data);
 
-	bool NFCDataTransport::connect()
-	{
-		d_isConnected = true;
-		return true;
-	}
-
-	void NFCDataTransport::disconnect()
-	{
-		d_isConnected = false;
-	}
-
-	bool NFCDataTransport::isConnected()
-	{
-		return d_isConnected;
-	}
-
-	std::string NFCDataTransport::getName() const
-	{
-		return getNFCReaderUnit()->getName();
-	}
-
-    void NFCDataTransport::send(const std::vector<unsigned char>& data)
-    {
-        d_response.clear();
-
-        EXCEPTION_ASSERT_WITH_LOG(getNFCReaderUnit(), LibLogicalAccessException,
-                                  "The NFC reader unit object "
-                                  "is null. We cannot send.");
-
-        if (data.size() > 0)
+        int res = nfc_initiator_transceive_bytes(getNFCReaderUnit()->getDevice(),
+                                                 &data[0], data.size(), returnedData,
+                                                 sizeof(returnedData), 0);
+        if (res == NFC_EMFCAUTHFAIL)
         {
-            unsigned char returnedData[255];
-            memset(returnedData, 0x00, sizeof(returnedData));
-            LOG(LogLevel::COMS) << "APDU command: "
-                                << BufferHelper::getHex(data);
-
-            int res = nfc_initiator_transceive_bytes(
-                getNFCReaderUnit()->getDevice(), &data[0], data.size(),
-                returnedData, sizeof(returnedData), 0);
-            if (res == NFC_EMFCAUTHFAIL)
-            {
-                // If the authentication command fail against a Mifare Classic,
-                // the card is unusable unless we re-select it again. Calling
-                // connect() on the reader unit does the job.
-                getReaderUnit()->connect();
-            }
-            if (res >= 0)
-			{
-				LOG(DEBUGS) << "Received " << res << " bytes from the NFC reader.";
-                d_response = std::vector<unsigned char>(returnedData,
-                                                        returnedData + res);
-            }
-            else if (!ignore_error_)
-            {
-                CheckNFCError(res);
-            }
+            // If the authentication command fail against a Mifare Classic,
+            // the card is unusable unless we re-select it again. Calling
+            // connect() on the reader unit does the job.
+            getReaderUnit()->connect();
+        }
+        if (res >= 0)
+        {
+            LOG(DEBUGS) << "Received " << res << " bytes from the NFC reader.";
+            d_response = std::vector<unsigned char>(returnedData, returnedData + res);
+        }
+        else if (!ignore_error_)
+        {
+            CheckNFCError(res);
         }
     }
+}
 
-	void NFCDataTransport::CheckNFCError(int errorFlag)
-	{
-		if (errorFlag < 0)
-		{
-			char conv[64];
-			std::string msg = std::string("NFC error : ");
-			sprintf(conv, "%d", errorFlag);
-			msg += std::string(conv);
-			msg += std::string(". ");
-
-			switch (errorFlag)
-			{
-				case NFC_EIO:
-					msg += std::string("Input / output error, device may not be usable anymore without re-open it.");
-					break;
-				case NFC_EINVARG:
-					msg += std::string("Invalid argument(s).");
-					break;
-				case NFC_EDEVNOTSUPP:
-					msg += std::string("Operation not supported by device.");
-					break;
-				case NFC_ENOTSUCHDEV:
-					msg += std::string("No such device.");
-					break;
-				case NFC_EOVFLOW:
-					msg += std::string("Buffer overflow.");
-					break;
-				case NFC_ETIMEOUT:
-					msg += std::string("Operation timed out.");
-					break;
-				case NFC_EOPABORTED:
-					msg += std::string("Operation aborted (by user).");
-					break;
-				case NFC_ENOTIMPL:
-					msg += std::string("Not (yet) implemented.");
-					break;
-				case NFC_ETGRELEASED:
-					msg += std::string("Target released.");
-					break;
-				case NFC_ERFTRANS:
-					msg += std::string("Error while RF transmission.");
-					break;
-				case NFC_EMFCAUTHFAIL:
-					msg += std::string("MIFARE Classic: authentication failed.");
-					break;
-				case NFC_ESOFT:
-					msg += std::string("Software error (allocation, file/pipe creation, etc.).");
-					break;
-				case NFC_ECHIP:
-					msg += std::string("Device's internal chip error.");
-					break;
-			default: ;
-			}
-
-			THROW_EXCEPTION_WITH_LOG(CardException, msg);
-		}
-	}
-
-    std::vector<unsigned char> NFCDataTransport::receive(long int /*timeout*/)
+void NFCDataTransport::CheckNFCError(int errorFlag)
+{
+    if (errorFlag < 0)
     {
-		std::vector<unsigned char> r = d_response;
-		LOG(LogLevel::COMS) << "APDU response: " << BufferHelper::getHex(r);
+        char conv[64];
+        std::string msg = std::string("NFC error : ");
+        sprintf(conv, "%d", errorFlag);
+        msg += std::string(conv);
+        msg += std::string(". ");
 
-		d_response.clear();
-		return r;
+        switch (errorFlag)
+        {
+        case NFC_EIO:
+            msg += std::string("Input / output error, device may not be usable anymore "
+                               "without re-open it.");
+            break;
+        case NFC_EINVARG: msg += std::string("Invalid argument(s)."); break;
+        case NFC_EDEVNOTSUPP:
+            msg += std::string("Operation not supported by device.");
+            break;
+        case NFC_ENOTSUCHDEV: msg += std::string("No such device."); break;
+        case NFC_EOVFLOW: msg += std::string("Buffer overflow."); break;
+        case NFC_ETIMEOUT: msg += std::string("Operation timed out."); break;
+        case NFC_EOPABORTED: msg += std::string("Operation aborted (by user)."); break;
+        case NFC_ENOTIMPL: msg += std::string("Not (yet) implemented."); break;
+        case NFC_ETGRELEASED: msg += std::string("Target released."); break;
+        case NFC_ERFTRANS: msg += std::string("Error while RF transmission."); break;
+        case NFC_EMFCAUTHFAIL:
+            msg += std::string("MIFARE Classic: authentication failed.");
+            break;
+        case NFC_ESOFT:
+            msg += std::string("Software error (allocation, file/pipe creation, etc.).");
+            break;
+        case NFC_ECHIP: msg += std::string("Device's internal chip error."); break;
+        default:;
+        }
+
+        THROW_EXCEPTION_WITH_LOG(CardException, msg);
     }
+}
 
-    std::string NFCDataTransport::getDefaultXmlNodeName() const
-    {
-        return "NFCDataTransport";
-    }
+std::vector<unsigned char> NFCDataTransport::receive(long int /*timeout*/)
+{
+    std::vector<unsigned char> r = d_response;
+    LOG(LogLevel::COMS) << "APDU response: " << BufferHelper::getHex(r);
 
-	void NFCDataTransport::serialize(boost::property_tree::ptree& parentNode)
-	{
-		boost::property_tree::ptree node;
+    d_response.clear();
+    return r;
+}
 
-		node.put("<xmlattr>.type", getTransportType());
-		parentNode.add_child(getDefaultXmlNodeName(), node);
-	}
+std::string NFCDataTransport::getDefaultXmlNodeName() const
+{
+    return "NFCDataTransport";
+}
 
-	void NFCDataTransport::unSerialize(boost::property_tree::ptree& /*node*/)
-	{
+void NFCDataTransport::serialize(boost::property_tree::ptree &parentNode)
+{
+    boost::property_tree::ptree node;
 
-	}
+    node.put("<xmlattr>.type", getTransportType());
+    parentNode.add_child(getDefaultXmlNodeName(), node);
+}
 
-    std::vector<unsigned char> NFCDataTransport::sendCommand(const std::vector<unsigned char>& command, long int timeout)
-    {
-        LOG(LogLevel::COMS) << "Sending command " << BufferHelper::getHex(command) << " command size {" << command.size() << "} timeout {" << timeout << "}...";
+void NFCDataTransport::unSerialize(boost::property_tree::ptree & /*node*/)
+{
+}
 
-	    d_lastCommand = command;
-        d_lastResult.clear();
+std::vector<unsigned char>
+NFCDataTransport::sendCommand(const std::vector<unsigned char> &command, long int timeout)
+{
+    LOG(LogLevel::COMS) << "Sending command " << BufferHelper::getHex(command)
+                        << " command size {" << command.size() << "} timeout {" << timeout
+                        << "}...";
 
-        if (command.size() > 0)
-            send(command);
+    d_lastCommand = command;
+    d_lastResult.clear();
 
-        std::vector<unsigned char> res = receive(timeout);
-        d_lastResult = res;
-        LOG(LogLevel::COMS) << "Response received successfully ! Reponse: " << BufferHelper::getHex(res) << " size {" << res.size() << "}";
+    if (command.size() > 0)
+        send(command);
 
-        return res;
-    }
+    std::vector<unsigned char> res = receive(timeout);
+    d_lastResult                   = res;
+    LOG(LogLevel::COMS) << "Response received successfully ! Reponse: "
+                        << BufferHelper::getHex(res) << " size {" << res.size() << "}";
 
-    bool NFCDataTransport::ignoreAllError(bool ignore)
-    {
-        bool tmp = ignore_error_;
-        ignore_error_ = ignore;
-        return tmp;
-    }
+    return res;
+}
 
-    bool NFCDataTransport::ignoreAllError() const
-    {
-        return ignore_error_;
-    }
+bool NFCDataTransport::ignoreAllError(bool ignore)
+{
+    bool tmp      = ignore_error_;
+    ignore_error_ = ignore;
+    return tmp;
+}
+
+bool NFCDataTransport::ignoreAllError() const
+{
+    return ignore_error_;
+}
 }

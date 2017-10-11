@@ -14,65 +14,68 @@
 #define LIBLOGICALACCESS_API
 #endif
 #ifndef DISABLE_PRAGMA_WARNING
-#define DISABLE_PRAGMA_WARNING /**< \brief winsmcrd.h was modified to support this macro, to avoid MSVC specific warnings pragma */
+#define DISABLE_PRAGMA_WARNING /**< \brief winsmcrd.h was modified to support this       \
+                                  macro, to avoid MSVC specific warnings pragma */
 #endif
 #endif
 
-extern "C"
+extern "C" {
+LIBLOGICALACCESS_API char *getLibraryName()
 {
-    LIBLOGICALACCESS_API char *getLibraryName()
-    {
-        return (char *)"NFC";
-    }
+    return (char *)"NFC";
+}
 
-    LIBLOGICALACCESS_API void getNFCReader(std::shared_ptr<logicalaccess::ReaderProvider>* rp)
+LIBLOGICALACCESS_API void getNFCReader(std::shared_ptr<logicalaccess::ReaderProvider> *rp)
+{
+    if (rp != nullptr)
     {
-        if (rp != nullptr)
+        *rp = logicalaccess::NFCReaderProvider::createInstance();
+    }
+}
+
+LIBLOGICALACCESS_API bool getReaderInfoAt(unsigned int index, char *readername,
+                                          size_t readernamelen, void **getterfct)
+{
+    bool ret = false;
+    if (readername != nullptr && readernamelen == PLUGINOBJECT_MAXLEN &&
+        getterfct != nullptr)
+    {
+        switch (index)
         {
-            *rp = logicalaccess::NFCReaderProvider::createInstance();
+        case 0:
+        {
+            *getterfct = (void *)&getNFCReader;
+            sprintf(readername, READER_NFC);
+            ret = true;
+        }
+        break;
+        default:;
         }
     }
 
-    LIBLOGICALACCESS_API bool getReaderInfoAt(unsigned int index, char* readername, size_t readernamelen, void** getterfct)
+    return ret;
+}
+
+LIBLOGICALACCESS_API void
+getCardService(std::shared_ptr<logicalaccess::Chip> c,
+               std::shared_ptr<logicalaccess::CardService> &service,
+               logicalaccess::CardServiceType type)
+{
+    // Only support UIDChanger service.
+    if (type != logicalaccess::CST_UID_CHANGER)
+        return;
+
+    // We must first fetch the reader unit and make sure its a NFCReaderUnit,
+    // otherwise we cannot create the Service.
+    if (!c || !c->getCommands() || !c->getCommands()->getReaderCardAdapter() ||
+        !c->getCommands()->getReaderCardAdapter()->getDataTransport() ||
+        !c->getCommands()->getReaderCardAdapter()->getDataTransport()->getReaderUnit())
     {
-        bool ret = false;
-        if (readername != nullptr && readernamelen == PLUGINOBJECT_MAXLEN && getterfct != nullptr)
-        {
-            switch (index)
-            {
-            case 0:
-            {
-                *getterfct = (void*)&getNFCReader;
-                sprintf(readername, READER_NFC);
-                ret = true;
-            }
-                break;
-            default: ;
-            }
-        }
-
-        return ret;
+        return;
     }
-
-    LIBLOGICALACCESS_API void getCardService(std::shared_ptr<logicalaccess::Chip> c,
-                                             std::shared_ptr<logicalaccess::CardService> &service,
-                                             logicalaccess::CardServiceType type)
+    if (c->getCardType() == "Mifare1K" || c->getCardType() == "Mifare4K")
     {
-        // Only support UIDChanger service.
-        if (type != logicalaccess::CST_UID_CHANGER)
-            return;
-
-        // We must first fetch the reader unit and make sure its a NFCReaderUnit,
-        // otherwise we cannot create the Service.
-        if (!c || !c->getCommands() || !c->getCommands()->getReaderCardAdapter() ||
-            !c->getCommands()->getReaderCardAdapter()->getDataTransport() ||
-            !c->getCommands()->getReaderCardAdapter()->getDataTransport()->getReaderUnit())
-        {
-            return;
-        }
-        if (c->getCardType() == "Mifare1K" || c->getCardType() == "Mifare4K")
-        {
-            service = std::make_shared<logicalaccess::MifareClassicUIDChangerService>(c);
-        }
+        service = std::make_shared<logicalaccess::MifareClassicUIDChangerService>(c);
     }
+}
 }

@@ -10,34 +10,32 @@
 
 namespace logicalaccess
 {
-    NFCReaderUnitConfiguration::NFCReaderUnitConfiguration()
-        : ReaderUnitConfiguration(READER_NFC)
-    {
-	    NFCReaderUnitConfiguration::resetConfiguration();
-    }
+NFCReaderUnitConfiguration::NFCReaderUnitConfiguration()
+    : ReaderUnitConfiguration(READER_NFC)
+{
+    NFCReaderUnitConfiguration::resetConfiguration();
+}
 
-    NFCReaderUnitConfiguration::~NFCReaderUnitConfiguration()
-    {
-    }
+NFCReaderUnitConfiguration::~NFCReaderUnitConfiguration()
+{
+}
 
-    void NFCReaderUnitConfiguration::resetConfiguration()
-    {
-        
-    }
+void NFCReaderUnitConfiguration::resetConfiguration()
+{
+}
 
-    void NFCReaderUnitConfiguration::serialize(boost::property_tree::ptree& parentNode)
-    {
-        boost::property_tree::ptree node;
-        parentNode.add_child(getDefaultXmlNodeName(), node);
-    }
+void NFCReaderUnitConfiguration::serialize(boost::property_tree::ptree &parentNode)
+{
+    boost::property_tree::ptree node;
+    parentNode.add_child(getDefaultXmlNodeName(), node);
+}
 
-    void NFCReaderUnitConfiguration::unSerialize(boost::property_tree::ptree& /*node*/)
-    {
-        
-    }
+void NFCReaderUnitConfiguration::unSerialize(boost::property_tree::ptree & /*node*/)
+{
+}
 
-    std::string NFCReaderUnitConfiguration::getDefaultXmlNodeName() const
-    {
-        return "NFCReaderUnitConfiguration";
-    }
+std::string NFCReaderUnitConfiguration::getDefaultXmlNodeName() const
+{
+    return "NFCReaderUnitConfiguration";
+}
 }

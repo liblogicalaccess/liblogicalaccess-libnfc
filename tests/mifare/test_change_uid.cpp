@@ -21,10 +21,12 @@
 
 void introduction()
 {
-    PRINT_TIME("This test target Mifare1K cards. It tests the implementation of UID changing");
+    PRINT_TIME(
+        "This test target Mifare1K cards. It tests the implementation of UID changing");
 
     PRINT_TIME("You will have 20 seconds to insert a card. Test log below");
-    PRINT_TIME("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
+    PRINT_TIME(
+        "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
 
     LLA_SUBTEST_REGISTER("ReadUID");
     LLA_SUBTEST_REGISTER("WriteUID");
@@ -40,17 +42,16 @@ int main(int ac, char **av)
     ChipPtr chip;
     std::tie(provider, readerUnit, chip) = nfc_test_init(); // cannot work with pcsc
 
-    PRINT_TIME("Chip identifier: " <<
-                       logicalaccess::BufferHelper::getHex(chip->getChipIdentifier()));
+    PRINT_TIME("Chip identifier: "
+               << logicalaccess::BufferHelper::getHex(chip->getChipIdentifier()));
 
     LLA_ASSERT(chip->getCardType() == "Mifare1K",
-               "Chip is not a Mifare1K, but is " + chip->getCardType() +
-                       " instead.");
+               "Chip is not a Mifare1K, but is " + chip->getCardType() + " instead.");
 
     PRINT_TIME("Reader name = " << readerUnit->getName());
     PRINT_TIME("Reader connected name = " << readerUnit->getConnectedName());
 
-    //return 0;
+    // return 0;
     auto nfc_ru = std::dynamic_pointer_cast<logicalaccess::NFCReaderUnit>(readerUnit);
     LLA_ASSERT(nfc_ru, "ReaderUnit is not NFC.");
 
