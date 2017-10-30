@@ -21,7 +21,12 @@
 namespace logicalaccess
 {
 MifareNFCCommands::MifareNFCCommands()
-    : MifareCommands()
+    : MifareCommands(CMD_MIFARENFC)
+{
+}
+
+MifareNFCCommands::MifareNFCCommands(std::string ct)
+    : MifareCommands(ct)
 {
 }
 

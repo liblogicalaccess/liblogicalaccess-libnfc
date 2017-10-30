@@ -16,16 +16,19 @@
 
 namespace logicalaccess
 {
+#define CMD_MIFARENFC "MifareNFC"
 /**
  * \brief The Mifare card provider class for NFC reader.
  */
-class LIBLOGICALACCESS_API MifareNFCCommands : public virtual MifareCommands
+class LIBLOGICALACCESS_API MifareNFCCommands : public MifareCommands
 {
   public:
     /**
      * \brief Constructor.
      */
     MifareNFCCommands();
+
+    MifareNFCCommands(std::string);
 
     /**
      * \brief Destructor.
