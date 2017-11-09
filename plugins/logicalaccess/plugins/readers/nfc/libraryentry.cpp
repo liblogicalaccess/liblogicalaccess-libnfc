@@ -1,14 +1,14 @@
 #include <string>
 #include <memory>
-#include "logicalaccess/cards/chip.hpp"
-#include "logicalaccess/services/cardservice.hpp"
-#include "logicalaccess/cards/commands.hpp"
-#include "logicalaccess/readerproviders/readerprovider.hpp"
-#include "nfcreaderprovider.hpp"
-#include "commands/mifareclassicuidchangerservice.hpp"
+#include <logicalaccess/cards/chip.hpp>
+#include <logicalaccess/services/cardservice.hpp>
+#include <logicalaccess/cards/commands.hpp>
+#include <logicalaccess/readerproviders/readerprovider.hpp>
+#include <logicalaccess/plugins/readers/nfc/nfcreaderprovider.hpp>
+#include <logicalaccess/plugins/readers/nfc/commands/mifareclassicuidchangerservice.hpp>
 
 #ifdef _MSC_VER
-#include "logicalaccess/msliblogicalaccess.h"
+#include <logicalaccess/msliblogicalaccess.h>
 #else
 #ifndef LIBLOGICALACCESS_API
 #define LIBLOGICALACCESS_API

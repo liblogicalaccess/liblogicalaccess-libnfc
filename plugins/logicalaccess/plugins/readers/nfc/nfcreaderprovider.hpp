@@ -7,13 +7,13 @@
 #ifndef LOGICALACCESS_READERNFC_PROVIDER_HPP
 #define LOGICALACCESS_READERNFC_PROVIDER_HPP
 
-#include "logicalaccess/readerproviders/readerprovider.hpp"
-#include "nfcreaderunit.hpp"
+#include <logicalaccess/readerproviders/readerprovider.hpp>
+#include <logicalaccess/plugins/readers/nfc/nfcreaderunit.hpp>
 
 #include <string>
 #include <vector>
 
-#include "logicalaccess/logs.hpp"
+#include <logicalaccess/logs.hpp>
 
 
 namespace logicalaccess

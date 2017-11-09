@@ -1,7 +1,8 @@
-#include "mifareclassicuidchangerservice.hpp"
-#include "../nfcreaderunit.hpp"
-#include "logicalaccess/cards/chip.hpp"
-#include "logicalaccess/cards/commands.hpp"
+#include <logicalaccess/plugins/readers/nfc/commands/mifareclassicuidchangerservice.hpp>
+#include <logicalaccess/plugins/readers/nfc/nfcreaderunit.hpp>
+#include <logicalaccess/cards/chip.hpp>
+#include <logicalaccess/cards/commands.hpp>
+#include <logicalaccess/logs.hpp>
 
 using namespace logicalaccess;
 

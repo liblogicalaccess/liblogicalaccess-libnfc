@@ -7,8 +7,8 @@
 #ifndef LOGICALACCESS_MIFARENFCCOMMANDS_HPP
 #define LOGICALACCESS_MIFARENFCCOMMANDS_HPP
 
-#include "mifare/mifarecommands.hpp"
-#include "../readercardadapters/nfcreadercardadapter.hpp"
+#include <logicalaccess/plugins/cards/mifare/mifarecommands.hpp>
+#include <logicalaccess/plugins/readers/nfc/readercardadapters/nfcreadercardadapter.hpp>
 
 #include <string>
 #include <vector>

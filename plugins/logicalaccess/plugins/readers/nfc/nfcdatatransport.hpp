@@ -7,8 +7,8 @@
 #ifndef LOGICALACCESS_NFCDATATRANSPORT_HPP
 #define LOGICALACCESS_NFCDATATRANSPORT_HPP
 
-#include "logicalaccess/readerproviders/datatransport.hpp"
-#include "nfcreaderunit.hpp"
+#include <logicalaccess/readerproviders/datatransport.hpp>
+#include <logicalaccess/plugins/readers/nfc/nfcreaderunit.hpp>
 #include <list>
 
 namespace logicalaccess

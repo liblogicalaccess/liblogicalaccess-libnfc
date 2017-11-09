@@ -4,32 +4,34 @@
  * \brief NFC reader unit.
  */
 
-#include "nfcreaderunit.hpp"
+#include <logicalaccess/plugins/readers/nfc/nfcreaderunit.hpp>
+#include <logicalaccess/plugins/readers/nfc/nfcreaderunitconfiguration.hpp>
+#include <logicalaccess/plugins/readers/nfc/nfcdatatransport.hpp>
 
 #include <iostream>
 #include <iomanip>
 #include <sstream>
 
-#include "logicalaccess/dynlibrary/librarymanager.hpp"
-#include "logicalaccess/dynlibrary/idynlibrary.hpp"
-#include "logicalaccess/myexception.hpp"
-#include "logicalaccess/settings.hpp"
+#include <logicalaccess/dynlibrary/librarymanager.hpp>
+#include <logicalaccess/dynlibrary/idynlibrary.hpp>
+#include <logicalaccess/myexception.hpp>
+#include <logicalaccess/settings.hpp>
 
-#include "logicalaccess/bufferhelper.hpp"
-#include "nfcreaderprovider.hpp"
-#include "logicalaccess/cards/chip.hpp"
+#include <logicalaccess/bufferhelper.hpp>
+#include <logicalaccess/readerproviders/readerprovider.hpp>
+#include <logicalaccess/cards/chip.hpp>
 #include <boost/filesystem.hpp>
 #include <boost/property_tree/ptree.hpp>
 #include <boost/date_time.hpp>
 #include <boost/property_tree/xml_parser.hpp>
 #include <thread>
-#include "readercardadapters/nfcreadercardadapter.hpp"
-#include "nfcdatatransport.hpp"
-#include "commands/mifarenfccommands.hpp"
-#include "iso7816/commands/desfireev1iso7816commands.hpp"
-#include "iso7816/commands/desfireiso7816resultchecker.hpp"
-#include "iso7816/iso7816resultchecker.hpp"
-#include "nfcreaderunit.hpp"
+#include <logicalaccess/plugins/readers/nfc/readercardadapters/nfcreadercardadapter.hpp>
+#include <logicalaccess/plugins/readers/nfc/commands/mifarenfccommands.hpp>
+#include <logicalaccess/plugins/readers/iso7816/commands/desfireev1iso7816commands.hpp>
+#include <logicalaccess/plugins/readers/iso7816/commands/desfireiso7816resultchecker.hpp>
+#include <logicalaccess/plugins/readers/iso7816/iso7816resultchecker.hpp>
+#include <logicalaccess/readerproviders/readerunit.hpp>
+#include <nfc/nfc.h>
 
 namespace logicalaccess
 {

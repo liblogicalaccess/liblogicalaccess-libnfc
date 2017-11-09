@@ -7,13 +7,13 @@
 #ifndef LOGICALACCESS_NFCREADERUNIT_HPP
 #define LOGICALACCESS_NFCREADERUNIT_HPP
 
-#include "logicalaccess/readerproviders/readerunit.hpp"
-#include "nfcreaderunitconfiguration.hpp"
+#include <logicalaccess/readerproviders/readerunit.hpp>
+#include <logicalaccess/plugins/readers/nfc/nfcreaderunitconfiguration.hpp>
 
-#include "logicalaccess/logs.hpp"
-#include "logicalaccess/myexception.hpp"
+#include <logicalaccess/logs.hpp>
+#include <logicalaccess/myexception.hpp>
 
-#include "nfc/nfc.h"
+#include <nfc/nfc.h>
 #include <map>
 
 namespace logicalaccess

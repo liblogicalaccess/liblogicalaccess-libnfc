@@ -4,12 +4,12 @@
  * \brief NFC data transport.
  */
 
-#include "nfcdatatransport.hpp"
-#include "logicalaccess/cards/readercardadapter.hpp"
-#include "logicalaccess/bufferhelper.hpp"
-#include "logicalaccess/logs.hpp"
-#include "logicalaccess/myexception.hpp"
-#include "nfcreaderunit.hpp"
+#include <logicalaccess/plugins/readers/nfc/nfcdatatransport.hpp>
+#include <logicalaccess/cards/readercardadapter.hpp>
+#include <logicalaccess/bufferhelper.hpp>
+#include <logicalaccess/logs.hpp>
+#include <logicalaccess/myexception.hpp>
+#include <logicalaccess/plugins/readers/nfc/nfcreaderunit.hpp>
 
 #include <boost/foreach.hpp>
 #include <boost/optional.hpp>

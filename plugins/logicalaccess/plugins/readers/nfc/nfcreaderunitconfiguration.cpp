@@ -4,9 +4,9 @@
  * \brief  NFC reader unit configuration.
  */
 
-#include "nfcreaderunitconfiguration.hpp"
-#include "nfcreaderprovider.hpp"
 #include <boost/property_tree/ptree.hpp>
+#include <logicalaccess/plugins/readers/nfc/nfcreaderprovider.hpp>
+#include <logicalaccess/plugins/readers/nfc/nfcreaderunitconfiguration.hpp>
 
 namespace logicalaccess
 {

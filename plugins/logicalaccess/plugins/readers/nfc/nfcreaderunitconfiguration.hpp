@@ -7,7 +7,7 @@
 #ifndef LOGICALACCESS_NFCREADERUNITCONFIGURATION_HPP
 #define LOGICALACCESS_NFCREADERUNITCONFIGURATION_HPP
 
-#include "logicalaccess/readerproviders/readerunitconfiguration.hpp"
+#include <logicalaccess/readerproviders/readerunitconfiguration.hpp>
 
 namespace logicalaccess
 {

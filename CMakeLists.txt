@@ -44,7 +44,7 @@ include_directories(${Boost_INCLUDE_DIRS})
 find_package(LibNFC REQUIRED)
 include_directories(${LIBNFC_INCLUDE_DIRS})
 
-include_directories(packages/include)
+include_directories(packages/include plugins)
 link_directories(${LIBLOGICALACCESS_PLUGINS_DIR})
 
 if(UNIX)
@@ -89,7 +89,15 @@ else()
   file(GLOB resourcerc ${CMAKE_CURRENT_SOURCE_DIR}/vc++/resource.rc)
 endif()
 
-add_subdirectory(plugins/pluginsreaderproviders)
+## Windows wants "liblogicalaccess"
+## while Linux wants "logicalaccess"
+if (UNIX)
+set (LLA_NAME logicalaccess)
+else ()
+set (LLA_NAME liblogicalaccess)
+endif()
+
+add_subdirectory(plugins/logicalaccess/plugins/readers)
 add_subdirectory(tests)
 
 if ( NOT DEFINED LIBLOGICALACCESS_CMAKE_CONFIG_DIR )

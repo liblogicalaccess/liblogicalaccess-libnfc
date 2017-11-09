@@ -4,10 +4,10 @@
  * \brief NFC reader/card adapter.
  */
 
-#include "nfcreadercardadapter.hpp"
-#include "../nfcreaderunit.hpp"
-#include "logicalaccess/bufferhelper.hpp"
-#include "../nfcdatatransport.hpp"
+#include <logicalaccess/plugins/readers/nfc/readercardadapters/nfcreadercardadapter.hpp>
+#include <logicalaccess/plugins/readers/nfc/nfcreaderunit.hpp>
+#include <logicalaccess/bufferhelper.hpp>
+#include <logicalaccess/plugins/readers/nfc/nfcdatatransport.hpp>
 
 namespace logicalaccess
 {

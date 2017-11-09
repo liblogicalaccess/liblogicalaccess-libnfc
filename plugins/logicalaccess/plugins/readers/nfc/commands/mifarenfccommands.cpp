@@ -4,19 +4,19 @@
  * \brief Mifare NFC commands.
  */
 
-#include "../commands/mifarenfccommands.hpp"
+#include <logicalaccess/plugins/readers/nfc/commands/mifarenfccommands.hpp>
 
 #include <iostream>
 #include <iomanip>
 #include <sstream>
 
-#include "../nfcreaderprovider.hpp"
-#include "mifare/mifarechip.hpp"
-#include "mifare/mifarelocation.hpp"
-#include "logicalaccess/cards/computermemorykeystorage.hpp"
-#include "logicalaccess/cards/readermemorykeystorage.hpp"
-#include "logicalaccess/logs.hpp"
-#include "logicalaccess/myexception.hpp"
+#include <logicalaccess/plugins/readers/nfc/nfcreaderprovider.hpp>
+#include <logicalaccess/plugins/cards/mifare/mifarechip.hpp>
+#include <logicalaccess/plugins/cards/mifare/mifarelocation.hpp>
+#include <logicalaccess/cards/computermemorykeystorage.hpp>
+#include <logicalaccess/cards/readermemorykeystorage.hpp>
+#include <logicalaccess/logs.hpp>
+#include <logicalaccess/myexception.hpp>
 
 namespace logicalaccess
 {

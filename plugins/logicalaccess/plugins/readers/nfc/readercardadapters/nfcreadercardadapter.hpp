@@ -7,13 +7,13 @@
 #ifndef LOGICALACCESS_DEFAULTNFCREADERCARDADAPTER_HPP
 #define LOGICALACCESS_DEFAULTNFCREADERCARDADAPTER_HPP
 
-#include "iso7816/readercardadapters/iso7816readercardadapter.hpp"
-#include "../nfcreaderprovider.hpp"
+#include <logicalaccess/plugins/cards/iso7816/readercardadapters/iso7816readercardadapter.hpp>
+#include <logicalaccess/plugins/readers/nfc/nfcreaderprovider.hpp>
 
 #include <string>
 #include <vector>
 
-#include "logicalaccess/logs.hpp"
+#include <logicalaccess/logs.hpp>
 
 namespace logicalaccess
 {

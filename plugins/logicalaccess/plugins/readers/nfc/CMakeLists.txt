@@ -6,20 +6,6 @@ if (WIN32)
   add_definitions(-DVERSION_PRODUCTNAME_VALUE="${VERSION_PRODUCTNAME_VALUE}")
 endif()
 
-if (WIN32)
-  set(INCLUDE_FOLDER ${CMAKE_CURRENT_SOURCE_DIR}/../../../packages/include/logicalaccess/plugins/readers/
-  ${CMAKE_CURRENT_SOURCE_DIR}/../../../packages/include/logicalaccess/plugins/cards/
-  )
-else ()
-set(INCLUDE_FOLDER ${LIBLOGICALACCESS_INCLUDE_DIR} ${LIBLOGICALACCESS_INCLUDE_DIR}/logicalaccess/plugins/readers/
-  ${LIBLOGICALACCESS_INCLUDE_DIR}/logicalaccess/plugins/cards/
-  ${LIBLOGICALACCESS_INCLUDE_DIR}/logicalaccess/
-    )
-endif()
-	
-INCLUDE_DIRECTORIES(${INCLUDE_FOLDER})
-
-
 file(GLOB SRCS *.cpp)
 file(GLOB include *.hpp)
 
@@ -36,10 +22,8 @@ file(GLOB source_commands ${CMAKE_CURRENT_SOURCE_DIR}/commands/*.cpp)
 SOURCE_GROUP("Source Files\\commands" FILES ${source_commands})
 
 
-set(INCLUDE_LIB ${include} ${include_core} ${include_readercardadapters}
-${include_readers} ${include_commands} ${include_services})
-set(SOURCE_LIB ${SRCS} ${source_readercardadapters} ${source_readers}
-${source_commands} ${source_services})
+set(INCLUDE_LIB ${include} ${include_readercardadapters} ${include_commands} ${include_services})
+set(SOURCE_LIB ${SRCS} ${source_readercardadapters} ${source_commands})
 
 add_library(
 	libnfc-nfcreaders
@@ -50,15 +34,6 @@ add_library(
     )
 
 SET_TARGET_PROPERTIES(libnfc-nfcreaders PROPERTIES VERSION ${LIBLOGICALACCESS_VERSION_STRING})
-
-
-## Windows wants "liblogicalaccess"
-## while Linux wants "logicalaccess"
-if (UNIX)
-set (LLA_NAME logicalaccess)
-else ()
-set (LLA_NAME liblogicalaccess)
-endif()
 
 target_link_libraries(
 	libnfc-nfcreaders

@@ -5,8 +5,8 @@
  */
 
 #include <algorithm>
-#include "nfcreaderprovider.hpp"
-#include "logicalaccess/myexception.hpp"
+#include <logicalaccess/plugins/readers/nfc/nfcreaderprovider.hpp>
+#include <logicalaccess/myexception.hpp>
 
 #ifdef __unix__
 #include <stdlib.h>
@@ -17,7 +17,7 @@
 #include <iomanip>
 #include <assert.h>
 
-#include "nfcreaderunit.hpp"
+#include <logicalaccess/plugins/readers/nfc/nfcreaderunit.hpp>
 
 namespace logicalaccess
 {
