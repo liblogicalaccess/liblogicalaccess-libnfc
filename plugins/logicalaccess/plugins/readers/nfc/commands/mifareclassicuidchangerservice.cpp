@@ -6,8 +6,8 @@
 
 using namespace logicalaccess;
 
-MifareClassicUIDChangerService::MifareClassicUIDChangerService(std::shared_ptr<Chip> chip)
-    : UIDChangerService(chip)
+MifareClassicUIDChangerCardService::MifareClassicUIDChangerCardService(std::shared_ptr<Chip> chip)
+    : UIDChangerCardService(chip)
 {
     // Store the reader unit used when the service was created.
     // We will talk directly to the reader-unit when performing an UID change.
@@ -28,7 +28,7 @@ MifareClassicUIDChangerService::MifareClassicUIDChangerService(std::shared_ptr<C
                               "instance of NFCReaderUnit from the card.");
 }
 
-void MifareClassicUIDChangerService::changeUID(const std::vector<uint8_t> &new_uid)
+void MifareClassicUIDChangerCardService::changeUID(const std::vector<uint8_t> &new_uid)
 {
     EXCEPTION_ASSERT_WITH_LOG(
         new_uid.size() == 4, LibLogicalAccessException,

@@ -75,7 +75,7 @@ getCardService(std::shared_ptr<logicalaccess::Chip> c,
     }
     if (c->getCardType() == "Mifare1K" || c->getCardType() == "Mifare4K")
     {
-        service = std::make_shared<logicalaccess::MifareClassicUIDChangerService>(c);
+        service = std::make_shared<logicalaccess::MifareClassicUIDChangerCardService>(c);
     }
 }
 }

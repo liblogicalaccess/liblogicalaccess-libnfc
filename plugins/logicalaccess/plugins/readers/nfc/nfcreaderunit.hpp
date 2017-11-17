@@ -21,7 +21,7 @@ namespace logicalaccess
 class Profile;
 class NFCReaderCardAdapter;
 class NFCReaderProvider;
-class MifareClassicUIDChangerService;
+class MifareClassicUIDChangerCardService;
 
 /**
  * \brief The NFC reader unit class.
@@ -265,7 +265,7 @@ class LIBLOGICALACCESS_API NFCReaderUnit : public ReaderUnit
         bool dt_error_flag_;
     };
 
-    friend class MifareClassicUIDChangerService;
+    friend class MifareClassicUIDChangerCardService;
 };
 }
 
