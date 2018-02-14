@@ -77,3 +77,6 @@ install ( FILES ${include} DESTINATION include/logicalaccess/plugins/readers/nfc
 install ( FILES ${include_readercardadapters} DESTINATION include/logicalaccess/plugins/readers/nfc/readercardadapters )
 install ( FILES ${include_commands} DESTINATION include/logicalaccess/plugins/readers/nfc/commands )
 install ( TARGETS libnfc-nfcreaders RUNTIME DESTINATION bin/${LIB_SUFFIX} ARCHIVE DESTINATION lib/${LIB_SUFFIX} LIBRARY DESTINATION lib/${LIB_SUFFIX} )
+if (MSVC)
+	install(FILES $<TARGET_PDB_FILE:${PROJECT_NAME}> DESTINATION pdb/${LIB_SUFFIX} OPTIONAL)
+endif()
