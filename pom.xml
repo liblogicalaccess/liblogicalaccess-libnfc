@@ -586,11 +586,7 @@
 		<dependency>
 			<groupId>eu.islog.lib.readers</groupId>
 			<artifactId>liblogicalaccess</artifactId>
-<<<<<<< HEAD
 			<version>2.0.0-SNAPSHOT</version>
-=======
-			<version>1.87.3</version>
->>>>>>> master
 			<scope>compile</scope>
 			<type>zip</type>
 		</dependency>
