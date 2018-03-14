@@ -101,7 +101,6 @@ set (LLA_NAME liblogicalaccess)
 endif()
 
 add_subdirectory(plugins/logicalaccess/plugins/readers)
-add_subdirectory(tests)
 
 if ( NOT DEFINED LIBLOGICALACCESS_CMAKE_CONFIG_DIR )
   set ( LIBLOGICALACCESS_CMAKE_CONFIG_DIR lib/${LIB_SUFFIX}/cmake/liblogicalaccess )
