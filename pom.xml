@@ -3,7 +3,7 @@
 	<groupId>eu.islog.lib.readers</groupId>
 	<artifactId>liblogicalaccess-libnfc</artifactId>
 	<packaging>pom</packaging>
-	<version>1.87.5</version>
+	<version>1.87.6</version>
 	<name>LibLogicalaccess LibNFC Components</name>
 	
 	<distributionManagement>
@@ -586,7 +586,7 @@
 		<dependency>
 			<groupId>eu.islog.lib.readers</groupId>
 			<artifactId>liblogicalaccess</artifactId>
-			<version>1.87.5</version>
+			<version>1.87.6</version>
 			<scope>compile</scope>
 			<type>zip</type>
 		</dependency>
