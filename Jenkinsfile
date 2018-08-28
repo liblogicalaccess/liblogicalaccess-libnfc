@@ -9,7 +9,7 @@ pipeline {
 		}
 		
 		stage('Ubuntu build') {
-			agent {	docker { image 'ubuntu-64-zesty-build' } }
+			agent {	docker { image 'ubuntu-64-bionic-build' } }
 			steps {
 				debPackageBuild()
 			}
