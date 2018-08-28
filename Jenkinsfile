@@ -1,22 +1,27 @@
 pipeline {
-	agent none
+    agent none
     stages {
-		stage('Debian build') {
-			agent {	docker { image 'debian-64-stable-build'	} }
-			steps {
-				debPackageBuild()
-			}
-		}
-		
-		stage('Ubuntu build') {
-			agent {	docker { image 'ubuntu-64-bionic-build' } }
-			steps {
-				debPackageBuild()
-			}
-		}
+        stage('Builds') {
+            parallel {
+                stage('Debian build') {
+                    agent { docker { image 'debian-64-stable-build' } }
+                    steps {
+                        debPackageBuild()
+                    }
+                }
+
+                stage('Ubuntu build') {
+                    agent { docker { image 'ubuntu-64-stable-bionic' } }
+                    steps {
+                        debPackageBuild()
+                    }
+                }
+            }
+        }
     }
+
 	
-	post {
+    post {
         changed {
             script {
                 if (currentBuild.currentResult == 'FAILURE') { // Other values: SUCCESS, UNSTABLE
