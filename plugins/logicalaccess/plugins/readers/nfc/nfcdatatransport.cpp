@@ -7,7 +7,7 @@
 #include <logicalaccess/plugins/readers/nfc/nfcdatatransport.hpp>
 #include <logicalaccess/cards/readercardadapter.hpp>
 #include <logicalaccess/bufferhelper.hpp>
-#include <logicalaccess/logs.hpp>
+#include <logicalaccess/plugins/llacommon/logs.hpp>
 #include <logicalaccess/myexception.hpp>
 #include <logicalaccess/plugins/readers/nfc/nfcreaderunit.hpp>
 

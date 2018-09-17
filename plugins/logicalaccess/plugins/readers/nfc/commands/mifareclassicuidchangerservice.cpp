@@ -2,7 +2,7 @@
 #include <logicalaccess/plugins/readers/nfc/nfcreaderunit.hpp>
 #include <logicalaccess/cards/chip.hpp>
 #include <logicalaccess/cards/commands.hpp>
-#include <logicalaccess/logs.hpp>
+#include <logicalaccess/plugins/llacommon/logs.hpp>
 
 using namespace logicalaccess;
 

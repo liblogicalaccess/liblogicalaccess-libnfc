@@ -15,7 +15,7 @@
 #include <logicalaccess/dynlibrary/librarymanager.hpp>
 #include <logicalaccess/dynlibrary/idynlibrary.hpp>
 #include <logicalaccess/myexception.hpp>
-#include <logicalaccess/settings.hpp>
+#include <logicalaccess/plugins/llacommon/settings.hpp>
 
 #include <logicalaccess/bufferhelper.hpp>
 #include <logicalaccess/readerproviders/readerprovider.hpp>

@@ -15,7 +15,7 @@
 #include <logicalaccess/plugins/cards/mifare/mifarelocation.hpp>
 #include <logicalaccess/cards/computermemorykeystorage.hpp>
 #include <logicalaccess/cards/readermemorykeystorage.hpp>
-#include <logicalaccess/logs.hpp>
+#include <logicalaccess/plugins/llacommon/logs.hpp>
 #include <logicalaccess/myexception.hpp>
 
 namespace logicalaccess
