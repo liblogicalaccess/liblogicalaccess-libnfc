@@ -8,7 +8,7 @@ class LLANFCConan(ConanFile):
     url = "<Package recipe repository url here, for issues about the package>"
     description = "<Description of LLA here>"
     settings = "os", "compiler", "build_type", "arch"
-    requires = 'LogicalAccess/2.1.0@islog/' + tools.Git().get_branch(), 'LibNFC/1.7.1@cis/stable'
+    requires = 'LogicalAccess/2.1.0@islog/develop', 'LibNFC/1.7.1@cis/stable'
     generators = "cmake"
     options = {}
     default_options = ''
