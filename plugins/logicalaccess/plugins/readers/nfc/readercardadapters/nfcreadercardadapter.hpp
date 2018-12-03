@@ -20,7 +20,7 @@ namespace logicalaccess
 /**
  * \brief A default NFC reader/card adapter class.
  */
-class LIBLOGICALACCESS_API NFCReaderCardAdapter : public ISO7816ReaderCardAdapter
+class LLA_READERS_NFC_NFC_API NFCReaderCardAdapter : public ISO7816ReaderCardAdapter
 {
   public:
     /**

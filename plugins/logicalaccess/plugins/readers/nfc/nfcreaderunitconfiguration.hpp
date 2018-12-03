@@ -8,13 +8,14 @@
 #define LOGICALACCESS_NFCREADERUNITCONFIGURATION_HPP
 
 #include <logicalaccess/readerproviders/readerunitconfiguration.hpp>
+#include <logicalaccess/plugins/readers/nfc/lla_readers_nfc_nfc_api.hpp>
 
 namespace logicalaccess
 {
 /**
  * \brief The NFC reader unit configuration base class.
  */
-class LIBLOGICALACCESS_API NFCReaderUnitConfiguration : public ReaderUnitConfiguration
+class LLA_READERS_NFC_NFC_API NFCReaderUnitConfiguration : public ReaderUnitConfiguration
 {
   public:
     /**

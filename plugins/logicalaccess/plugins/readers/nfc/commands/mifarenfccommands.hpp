@@ -20,7 +20,7 @@ namespace logicalaccess
 /**
  * \brief The Mifare card provider class for NFC reader.
  */
-class LIBLOGICALACCESS_API MifareNFCCommands : public MifareCommands
+class LLA_READERS_NFC_NFC_API MifareNFCCommands : public MifareCommands
 {
   public:
     /**

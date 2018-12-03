@@ -6,26 +6,15 @@
 #include <logicalaccess/readerproviders/readerprovider.hpp>
 #include <logicalaccess/plugins/readers/nfc/nfcreaderprovider.hpp>
 #include <logicalaccess/plugins/readers/nfc/commands/mifareclassicuidchangerservice.hpp>
-
-#ifdef _MSC_VER
-#include <logicalaccess/msliblogicalaccess.h>
-#else
-#ifndef LIBLOGICALACCESS_API
-#define LIBLOGICALACCESS_API
-#endif
-#ifndef DISABLE_PRAGMA_WARNING
-#define DISABLE_PRAGMA_WARNING /**< \brief winsmcrd.h was modified to support this       \
-                                  macro, to avoid MSVC specific warnings pragma */
-#endif
-#endif
+#include <logicalaccess/plugins/readers/nfc/lla_readers_nfc_nfc_api.hpp>
 
 extern "C" {
-LIBLOGICALACCESS_API char *getLibraryName()
+LLA_READERS_NFC_NFC_API char *getLibraryName()
 {
     return (char *)"NFC";
 }
 
-LIBLOGICALACCESS_API void getNFCReader(std::shared_ptr<logicalaccess::ReaderProvider> *rp)
+LLA_READERS_NFC_NFC_API void getNFCReader(std::shared_ptr<logicalaccess::ReaderProvider> *rp)
 {
     if (rp != nullptr)
     {
@@ -33,7 +22,7 @@ LIBLOGICALACCESS_API void getNFCReader(std::shared_ptr<logicalaccess::ReaderProv
     }
 }
 
-LIBLOGICALACCESS_API bool getReaderInfoAt(unsigned int index, char *readername,
+LLA_READERS_NFC_NFC_API bool getReaderInfoAt(unsigned int index, char *readername,
                                           size_t readernamelen, void **getterfct)
 {
     bool ret = false;
@@ -56,7 +45,7 @@ LIBLOGICALACCESS_API bool getReaderInfoAt(unsigned int index, char *readername,
     return ret;
 }
 
-LIBLOGICALACCESS_API void
+LLA_READERS_NFC_NFC_API void
 getCardService(std::shared_ptr<logicalaccess::Chip> c,
                std::shared_ptr<logicalaccess::CardService> &service,
                logicalaccess::CardServiceType type)

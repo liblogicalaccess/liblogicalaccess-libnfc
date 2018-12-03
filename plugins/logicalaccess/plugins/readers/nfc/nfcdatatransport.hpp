@@ -18,7 +18,7 @@ namespace logicalaccess
 /**
  * \brief An NFC data transport class.
  */
-class LIBLOGICALACCESS_API NFCDataTransport : public DataTransport
+class LLA_READERS_NFC_NFC_API NFCDataTransport : public DataTransport
 {
   public:
     /**

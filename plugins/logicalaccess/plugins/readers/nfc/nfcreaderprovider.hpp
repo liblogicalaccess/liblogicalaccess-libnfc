@@ -23,7 +23,7 @@ namespace logicalaccess
 /**
  * \brief NFC Reader Provider class.
  */
-class LIBLOGICALACCESS_API NFCReaderProvider : public ReaderProvider
+class LLA_READERS_NFC_NFC_API NFCReaderProvider : public ReaderProvider
 {
   public:
     /**

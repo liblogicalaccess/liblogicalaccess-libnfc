@@ -1,13 +1,14 @@
 #pragma once
 
 #include <logicalaccess/services/uidchanger/uidchangerservice.hpp>
+#include <logicalaccess/plugins/readers/nfc/lla_readers_nfc_nfc_api.hpp>
 
 namespace logicalaccess
 {
 class NFCReaderUnit;
 
 #define MIFARECLASSIC_UID_CHANGERSERVICE "MifareClassicUIDChanger"
-class LIBLOGICALACCESS_API MifareClassicUIDChangerCardService : public UIDChangerCardService
+class LLA_READERS_NFC_NFC_API MifareClassicUIDChangerCardService : public UIDChangerCardService
 {
 
   public:

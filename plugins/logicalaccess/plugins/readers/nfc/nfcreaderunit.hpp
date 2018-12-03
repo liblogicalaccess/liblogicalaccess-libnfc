@@ -9,7 +9,7 @@
 
 #include <logicalaccess/readerproviders/readerunit.hpp>
 #include <logicalaccess/plugins/readers/nfc/nfcreaderunitconfiguration.hpp>
-
+#include <logicalaccess/plugins/readers/nfc/lla_readers_nfc_nfc_api.hpp>
 #include <logicalaccess/plugins/llacommon/logs.hpp>
 #include <logicalaccess/myexception.hpp>
 
@@ -26,7 +26,7 @@ class MifareClassicUIDChangerCardService;
 /**
  * \brief The NFC reader unit class.
  */
-class LIBLOGICALACCESS_API NFCReaderUnit : public ReaderUnit
+class LLA_READERS_NFC_NFC_API NFCReaderUnit : public ReaderUnit
 {
   public:
     /**
