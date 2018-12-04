@@ -1,15 +1,14 @@
 from conans import ConanFile, CMake, tools
 import os
-import subprocess
 
 class LLANFCConan(ConanFile):
     name = "LogicalAccessNFC"
-    version = subprocess.check_output(["Gitversion", "/output", "json", "/showvariable", "MajorMinorPatch"]).decode().strip("\n").strip("\r")
+    version = "2.1.0"
     license = "https://github.com/islog/liblogicalaccess-libnfc/blob/master/LICENSE.LibLogicalAccess-LibNFC.txt"
     url = "https://github.com/islog/liblogicalaccess-libnfc"
     description = "LibLogicalAccess plugin to use NFC readers supported by LibNFC project"
     settings = "os", "compiler", "build_type", "arch"
-    requires = 'LogicalAccess/2.1.0@islog/develop', 'LibNFC/1.7.1@cis/stable'
+    requires = 'LogicalAccess/' + version + '@islog/develop', 'LibNFC/1.7.1@cis/stable'
     generators = "cmake"
     options = {}
     default_options = ''
