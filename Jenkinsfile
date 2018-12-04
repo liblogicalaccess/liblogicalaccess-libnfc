@@ -31,13 +31,24 @@ pipeline {
     }
 
     stages {
-        stage('Build') {
+        stage('Minimal Feature Build') {
             steps {
 				script {
 					lla.startJobForProfiles(["lla/x64_msvc_release_min",
 										"lla/x64_msvc_debug_min",
 										"lla/x86_msvc_release_min",
 										"lla/x86_msvc_debug_min"])
+				}
+            }
+        }
+
+        stage('Complete Feature Build') {
+            steps {
+				script {
+					lla.startJobForProfiles(["lla/x64_msvc_release_full",
+										"lla/x64_msvc_debug_full",
+										"lla/x86_msvc_release_full",
+										"lla/x86_msvc_debug_full"])
 				}
             }
         }
