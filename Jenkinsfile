@@ -33,7 +33,12 @@ pipeline {
     stages {
         stage('Build') {
             steps {
-                buildCommon()
+				script {
+					lla.startJobForProfiles(["lla/x64_msvc_release_min",
+										"lla/x64_msvc_debug_min",
+										"lla/x86_msvc_release_min",
+										"lla/x86_msvc_debug_min"])
+				}
             }
         }
     }
@@ -57,11 +62,4 @@ pipeline {
             }
         }
     }
-}
-
-def buildCommon() {
-    def boolBuildOptions = ['LogicalAccess:LLA_BUILD_UNITTEST']
-    def hardcodedOptions = [:]
-    def combinations = utils.generateOptionsCombinations(boolBuildOptions, hardcodedOptions)
-    lla.startJobForCombinations(combinations)
 }
