@@ -18,7 +18,11 @@ elif [ "$GIT_BRANCH" == "master" ]; then
 	if [ "$CODENAME" == "stretch" ]; then
 		CODENAME="stable"
 	fi
-	
+
+        if [ "$CODENAME" == "bionic" ]; then
+            # We just want to stable LLA package.
+            CODENAME="stable"
+        fi
 fi
 
 echo "GIT_BRANCH:"${BRANCH_NAME}
