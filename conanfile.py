@@ -12,7 +12,8 @@ class LLANFCConan(ConanFile):
     generators = "cmake"
     options = {}
     default_options = ''
-    
+    exports_sources = "CMakeLists.txt", "cmake*", "plugins*" 
+
     def configure_cmake(self):
         cmake = CMake(self)
         if tools.os_info.is_windows:
