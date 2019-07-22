@@ -15,6 +15,8 @@ pipeline {
         // This is needed because MSBuild fails spuriously quiet often
         // on the build machine.
         MSBUILDDISABLENODEREUSE = 1
+
+        CONAN_REVISIONS_ENABLED = 1
     }
     parameters {
         booleanParam(name: 'BUILD_DEBUG',

@@ -12,6 +12,7 @@ class LLANFCConan(ConanFile):
     generators = "cmake"
     options = {}
     default_options = ''
+    revision_mode = "scm"
     exports_sources = "CMakeLists.txt", "cmake*", "plugins*" 
 
     def configure_cmake(self):
