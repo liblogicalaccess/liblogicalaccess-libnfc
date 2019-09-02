@@ -39,7 +39,7 @@ SET_TARGET_PROPERTIES(libnfc-nfcreaders PROPERTIES VERSION ${LIBLOGICALACCESS_VE
 target_link_libraries(libnfc-nfcreaders PUBLIC
         CONAN_PKG::LogicalAccess
         CONAN_PKG::LibNFC)
-target_include_directories(libnfc-nfcreaders PUBLIC ${CMAKE_SOURCE_DIR}/plugins)
+target_include_directories(libnfc-nfcreaders PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/../../../../../plugins)
 
 install(FILES ${include} DESTINATION include/logicalaccess/plugins/readers/nfc)
 install(FILES ${include_readercardadapters} DESTINATION include/logicalaccess/plugins/readers/nfc/readercardadapters)

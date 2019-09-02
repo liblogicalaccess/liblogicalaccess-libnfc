@@ -3,7 +3,7 @@ cmake_minimum_required(VERSION 2.6)
 project(liblogicalaccess-libnfc)
 
 # Perform Conan basic setup to import targets etc
-include(${CMAKE_BINARY_DIR}/conanbuildinfo.cmake)
+include(${CMAKE_CURRENT_BINARY_DIR}/conanbuildinfo.cmake)
 conan_basic_setup(TARGETS)
 
 include(GenerateExportHeader)
@@ -25,7 +25,7 @@ macro(LLA_GENERATE_EXPORTS)
     install(FILES ${_EXPORT_FILE_PATH} DESTINATION ${HEADER_RELATIVE_INSTALL_DIR})
 endmacro()
 
-list(APPEND CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake)
+list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
 
 find_package(CXX11 REQUIRED)
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${CXX11_FLAGS}")
