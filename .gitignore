@@ -19,3 +19,6 @@ cmake_install.cmake
 /install_manifest.txt
 /LibLogicalAccessConfig.cmake
 /*.opensdf
+/.vs/liblogicalaccess-libnfc/v15
+*~
+lla_*_api.hpp
