@@ -8,7 +8,7 @@ class LLANFCConan(ConanFile):
     url = "https://github.com/islog/liblogicalaccess-libnfc"
     description = "LibLogicalAccess plugin to use NFC readers supported by LibNFC project"
     settings = "os", "compiler", "build_type", "arch"
-    requires = 'LogicalAccess/' + version + '@islog/rc1', 'LibNFC/1.7.1@cis/stable'
+    requires = 'LogicalAccess/' + version + '@islog/develop', 'LibNFC/1.7.1@cis/stable'
     generators = "cmake"
     options = {}
     default_options = ''
