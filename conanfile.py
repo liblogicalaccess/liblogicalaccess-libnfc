@@ -4,7 +4,7 @@ import os
 
 class LLANFCConan(ConanFile):
     name = "LogicalAccessNFC"
-    version = "2.2.0"
+    version = "2.2.1"
     license = "https://github.com/islog/liblogicalaccess-libnfc/blob/master/LICENSE.LibLogicalAccess-LibNFC.txt"
     url = "https://github.com/islog/liblogicalaccess-libnfc"
     description = "LibLogicalAccess plugin to use NFC readers supported by LibNFC project"
