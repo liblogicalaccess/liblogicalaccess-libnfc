@@ -11,7 +11,7 @@ pipeline {
 
     environment {
         PACKAGE_NAME = "LogicalAccessNFC/2.2.1@islog/${BRANCH_NAME}"
-        LINUX_DOCKER_IMAGE_NAME = 'docker-registry.islog.com:5000/conan-recipes-support:cis-latest'
+        LINUX_DOCKER_IMAGE_NAME = 'docker-registry.islog.com:5000/conan-recipes-support:latest'
         // This is needed because MSBuild fails spuriously quiet often
         // on the build machine.
         MSBUILDDISABLENODEREUSE = 1
