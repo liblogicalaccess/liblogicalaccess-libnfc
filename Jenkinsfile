@@ -10,7 +10,7 @@ pipeline {
     }
 
     environment {
-        PACKAGE_NAME = "LogicalAccessNFC/2.4.0@islog/${BRANCH_NAME}"
+        PACKAGE_NAME = "LogicalAccessNFC/2.4.2@islog/${BRANCH_NAME}"
         LINUX_DOCKER_IMAGE_NAME = 'artifacts.linq.hidglobal.com:5000/debian_build:latest'
         // This is needed because MSBuild fails spuriously quiet often
         // on the build machine.
